@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="abdi_apparatus_detail">
+        <item>设备类型</item>
+        <item>设备属性</item>
+        <item>屏幕类型</item>
+        <item>屏幕属性</item>
+        <item>设备宽高</item>
+    </string-array>
+</resources>

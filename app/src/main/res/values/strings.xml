@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">SharedAdvertisement</string>
+    <string name="main_title">我要发广告</string>
+    <string name="main_hint">输入区域、板块、街道等查找多媒体</string>
+    <string name="main_bottom_text">扫一扫</string>
+    <string name="main_dialog_price">单价：10元／分钟</string>
+    <string name="main_dialog_location">上海市漕河泾开发区</string>
+    <string name="main_dialog_distance">距离20公里</string>
+    <string name="main_dialog_detail">详细信息</string>
+    <string name="main_dialog_publish">发表广告</string>
+    <!--MessageAuthenticationActivity-->
+    <string name="maa_authenticate">手机验证</string>
+    <string name="maa_tip">请输入您的手机号码，登录“我要发广告”</string>
+    <string name="maa_phone_id">+86</string>
+    <string name="maa_num_hint">请输入手机号码</string>
+    <string name="maa_au_num">验证码</string>
+    <string name="maa_au_num_hint">请输入验证码</string>
+    <string name="maa_au_num_get">获取验证码</string>
+    <string name="maa_sign_in">登入</string>
+    <!--AdvertisementBoardDetailInfoActivity-->
+    <string name="abdi_title">详细信息</string>
+    <string name="abdi_model">盛大原创古-55寸小米电视</string>
+    <string name="abdi_telephone">15000654142</string>
+    <string name="abdi_apparatus_detail_title">设备详情</string>
+    <string name="adbi_cancel">取消</string>
+	<!--two dimention-->
+    <string name="encode_qrcode">生成二维码</string>
+    <string name="dencode_qrcode">扫描二维码</string>
+    <string name="code_text">请输入生成二维码的文本信息</string>
+    <string name="qrcodetext">这里显示扫描结果</string>
+    <string name="openTouch">打开手电筒</string>
+    <string name="closeTouch">关闭手电筒</string>
+	
+	<!--houjian add-->
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="my_order">我的订单</string>
+    <string name="user_info">用户信息</string>
+    <string name="my_video">我的视频</string>
+    <string name="auto_name">自动生成命名</string>
+    <string name="user_rename">用户重命名</string>
+    <string name="billboard_name">2017-11-06</string>
+    <string name="order_info1">审核中</string>
+    <string name="order_info2">审核完成</string>
+    <string name="no_video_message">无片源，你需要在播放前30分钟内上传片源，以便正常审核播放，请选择片源，谢谢！</string>
+    <string name="pay_message">你的片源将被上传，以便正常审核播放，确认付款吗？</string>
+    <string name="ok">确认</string>
+    <string name="cancle">取消</string>
+    <string name="minute_price">收费标准：10元/分钟</string>
+    <string name="total_price">总价：50元</string>
+    <string name="start_time">开始时间</string>
+    <string name="edit_startTime">2017/11/01</string>
+    <string name="upload_video">请上传视频资源</string>
+    <string name="rename_video">重命名</string>
+    <string name="delete_video">删除文件</string>
+    <string name="playback_length">播放时长</string>
+    <string name="play_default_time">5分钟（默认）</string>
+    <string name="play_times">播放次数</string>
+    <string name="play_default_times">一次（默认）</string>
+    <string name="Advanced_Options">高级选项</string>
+    <string name="Play_countdown">离播放时间还有</string>
+    <string name="confirm_payment">确认付款</string>
+    <string name="upload_video_name">上传片源命名</string>
+    <string name="minute">分钟</string>
+    <string name="date">天</string>
+    <string name="select_time_erro">选择播放时间应超过当前时间30分钟以上，以便正常审核播放，请重新选择播放时间，谢谢！</string>
+</resources>

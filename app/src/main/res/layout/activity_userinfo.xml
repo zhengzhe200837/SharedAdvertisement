@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+       android:id="@+id/my_order"
+       android:layout_below="@id/user_info"
+       android:layout_width="match_parent"
+       android:layout_height="48dp">
+       
+       <ImageView
+           android:id="@+id/image_order"
+           android:layout_width="30dp"
+           android:layout_marginLeft="15dp"
+           android:layout_height="match_parent"
+           android:src="@drawable/my_order" />"
+       
+       <TextView 
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:layout_centerVertical="true"
+           android:layout_toRightOf="@id/image_order"
+           android:layout_marginLeft="15dp"
+           android:gravity="center"
+           android:text="@string/my_order"
+           android:textSize="16sp" />
+       
+        <View
+           android:layout_width="match_parent"
+           android:layout_height="0.1dp"
+           android:layout_alignParentBottom="true"
+           android:background="#dbdbdb" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+       android:id="@+id/my_video"
+       android:layout_below="@id/my_order"
+       android:layout_width="match_parent"
+       android:layout_height="48dp">
+       
+      <ImageView
+           android:id="@+id/image_video"
+           android:layout_width="30dp"
+           android:layout_marginLeft="15dp"
+           android:layout_height="match_parent"
+           android:src="@drawable/my_video" />
+       
+       <TextView 
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:layout_centerVertical="true"
+           android:layout_toRightOf="@id/image_video"
+           android:layout_marginLeft="15dp"
+           android:gravity="center"
+           android:text="@string/my_video"
+           android:textSize="16sp"/>     
+    </RelativeLayout>
+    
+    <TextView
+           android:id="@+id/cancle"
+           android:layout_width="40dp"
+           android:layout_height="40dp"
+           android:text="@string/cancle"
+           android:textSize="16sp"
+           android:gravity="center"
+           android:layout_alignParentBottom="true"
+           android:layout_alignParentRight="true"
+           android:layout_marginRight="15dp"
+           android:layout_marginBottom="15dp"/>
+    
+</RelativeLayout>

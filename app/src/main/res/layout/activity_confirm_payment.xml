@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+     <TextView
+         android:id="@+id/confirm_payment"
+         android:layout_width="match_parent"
+         android:layout_height="60dp"
+         android:background="#F0F0F0"
+         style="@style/TextColorBlack"
+         android:text="@string/confirm_payment"
+         android:paddingLeft="20dp"
+         android:gravity="center_vertical"/>
+
+     <ImageView
+          android:id="@+id/video_image"
+          android:layout_below="@id/confirm_payment"
+          android:layout_width="match_parent"
+          android:layout_height="150dp"
+          android:layout_marginTop="10dp"
+          android:layout_marginLeft="20dp"
+          android:layout_marginRight="20dp"
+          android:scaleType="fitXY"
+          android:src="@drawable/billboard_photos"/>
+
+     <TextView
+          android:id="@+id/start_time_text"
+          android:layout_below="@+id/video_image"
+          android:layout_marginTop="20dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:text="@string/start_time"
+          android:textSize="16sp" />
+
+     <TextView
+          android:id="@+id/play_time_text"
+          android:layout_below="@+id/start_time_text"
+          android:layout_marginTop="5dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:text="@string/playback_length"
+          android:textSize="16sp" />
+     
+     <TextView
+          android:id="@+id/total_price_text"
+          android:layout_below="@+id/play_time_text"
+          android:layout_marginTop="5dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:text="@string/total_price"
+          android:textSize="16sp" />
+
+       
+     <View
+          android:id="@+id/line_view"
+          android:layout_below="@id/total_price_text"
+          android:layout_width="match_parent"
+          android:layout_height="0.1dp"
+          android:layout_marginTop="10dp"
+          android:background="#dbdbdb" />
+   
+     <TextView
+          android:id="@+id/Play_countdown_text"
+          android:layout_below="@id/line_view"
+          android:layout_marginTop="30dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:text="@string/Play_countdown"
+          android:textSize="16sp" />
+     
+     <Button
+          android:id="@+id/confirm_payment_text"
+          android:layout_below="@id/Play_countdown_text"
+          android:layout_marginTop="30dp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="15dp"
+          android:layout_marginRight="15dp"
+          android:layout_centerHorizontal="true"
+          android:text="@string/confirm_payment"
+          android:textSize="16sp"
+          android:background="@drawable/confirm_payment"/>
+
+     <TextView
+          android:id="@+id/cancle_text"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:text="@string/cancle"
+          android:textSize="16sp"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentRight="true"
+          android:gravity="center"
+          android:layout_marginRight="15dp"
+          android:layout_marginBottom="15dp"/>
+
+</RelativeLayout>

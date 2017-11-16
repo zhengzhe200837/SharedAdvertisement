@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="252.3dp"
+    android:orientation="vertical"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <View
+            android:layout_width="335dp"
+            android:layout_height="match_parent"/>
+        <ImageView
+            android:id="@+id/main_dialog_close"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@mipmap/close_icon"
+            android:gravity="center"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ad_de_icon"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="17dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/price_icon"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_dialog_price"
+                    android:textColor="#929292"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="11.6dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/main_dialog_location"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_dialog_location"
+                    android:textColor="#929292"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="11.6dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/location_icon"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_dialog_distance"
+                    android:textColor="#929292"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/main_dialog_detail"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/main_dialog_detail"
+                android:gravity="center"
+                android:background="@mipmap/main_dialog_detail"
+                android:textSize="13sp"
+                android:textColor="#535353"/>
+
+            <TextView
+                android:id="@+id/main_dialog_publish"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:layout_marginTop="25dp"
+                android:text="@string/main_dialog_publish"
+                android:gravity="center"
+                android:background="@mipmap/main_dialog_publish"
+                android:textSize="13sp"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+            
+    </LinearLayout>
+        
+</LinearLayout>
+

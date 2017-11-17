@@ -31,7 +31,7 @@ public class UserInfoActivity extends Activity {
 		
 		myVideoLayout.setOnClickListener(new OnClickListener() {			
 			public void onClick(View arg0) {
-				Intent mIntent = new Intent(UserInfoActivity.this, MyOrderActivity.class);
+				Intent mIntent = new Intent(UserInfoActivity.this, MyVideoActivity.class);
 				startActivity(mIntent);
 			}
 		});

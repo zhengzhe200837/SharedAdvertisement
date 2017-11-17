@@ -3,6 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <TextView
+        android:id="@+id/user_info"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#F0F0F0"
+        style="@style/TextColorBlack"
+        android:text="@string/user_info"
+        android:paddingLeft="20dp"
+        android:gravity="center_vertical"/>
+
     <RelativeLayout
        android:id="@+id/my_order"
        android:layout_below="@id/user_info"

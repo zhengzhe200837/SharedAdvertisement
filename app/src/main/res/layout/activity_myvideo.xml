@@ -4,18 +4,18 @@
     android:layout_height="match_parent" >
 
        <TextView
-           android:id="@+id/my_order"
+           android:id="@+id/my_video"
            android:layout_width="match_parent"
            android:layout_height="60dp"
            android:background="#F0F0F0"
            style="@style/TextColorBlack"
-           android:text="@string/my_order"
+           android:text="@string/my_video"
            android:paddingLeft="20dp"
            android:gravity="center_vertical"/>
 
        <ListView
-           android:id="@+id/myOrder_listView"
-           android:layout_below="@id/my_order"
+           android:id="@+id/myVideo_listView"
+           android:layout_below="@id/my_video"
            android:layout_width="match_parent"
            android:layout_height="wrap_content" />
 </RelativeLayout>

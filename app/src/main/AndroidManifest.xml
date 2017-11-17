@@ -85,6 +85,10 @@
             android:label="@string/user_info"
             android:theme="@style/AppThemeTitle"/>
 
+        <activity android:name="com.wind.adv.MyVideoActivity"
+            android:label="@string/my_video"
+            android:theme="@style/AppThemeTitle"/>
+
     </application>
 
 </manifest>

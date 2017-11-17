@@ -99,11 +99,25 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
             public void onClick(View v) {
                 if (v instanceof Button) {
                     if (Camera.Parameters.FLASH_MODE_TORCH.equals(CameraManager.get().getFlashMode())) {
-                        CameraManager.get().closeLight();
-                        ((Button) v).setText(R.string.openTouch);
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            CameraManager.get().closeLight();
+                            ((Button) v).setText(R.string.openTouch);
+                        } else {
+                            if (!CameraManager.mAutoFocousIng) {
+                                CameraManager.get().closeLight();
+                                ((Button) v).setText(R.string.openTouch);
+                            }
+                        }
                     } else if (Camera.Parameters.FLASH_MODE_OFF.equals(CameraManager.get().getFlashMode())) {
-                        CameraManager.get().openLight();
-                        ((Button) v).setText(R.string.closeTouch);
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            CameraManager.get().openLight();
+                            ((Button) v).setText(R.string.closeTouch);
+                        } else {
+                            if (!CameraManager.mAutoFocousIng) {
+                                CameraManager.get().openLight();
+                                ((Button) v).setText(R.string.closeTouch);
+                            }
+                        }
                     }
                 }
             }

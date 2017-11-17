@@ -27,10 +27,13 @@ import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+
+import sharedadvertisement.wind.com.sharedadvertisement.R;
 
 /**
  * This object wraps the Camera service object and expects to be the only one talking to it. The
@@ -206,11 +209,14 @@ public final class CameraManager {
    * @param message The message to deliver.
    */
   public void requestAutoFocus(Handler handler, int message) {
+
     if (camera != null && previewing) {
       autoFocusCallback.setHandler(handler, message);
-//      zhengzhe 修改手电筒 不能正常打开关闭问题  start
-//      camera.autoFocus(autoFocusCallback);
-//      zhengzhe 修改手电筒 不能正常打开关闭问题  end
+      if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+        mHandler = handler;
+        mAutoFocousIng = true;
+      }
+      camera.autoFocus(autoFocusCallback);
     }
   }
 
@@ -355,19 +361,57 @@ public final class CameraManager {
 		return context;
 	}
 //	zhengzhe start
+      public static boolean mAutoFocousIng = false;
+      public Handler mHandler = null;
+
     public void openLight() {
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
         if (camera != null) {
             Camera.Parameters parameter = camera.getParameters();
             parameter.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
             camera.setParameters(parameter);
         }
+      } else {
+        if (!mAutoFocousIng) {
+          if (mHandler != null && mHandler.hasMessages(R.id.auto_focus)) {
+            mHandler.removeMessages(R.id.auto_focus);
+          }
+          if (camera != null) {
+            Camera.Parameters parameter = camera.getParameters();
+            parameter.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            camera.setParameters(parameter);
+          }
+          if (mHandler != null) {
+            Message message = mHandler.obtainMessage(R.id.auto_focus);
+            mHandler.sendMessageDelayed(message, AutoFocusCallback.AUTOFOCUS_INTERVAL_MS);
+          }
+        }
+      }
     }
+
     public void closeLight() {
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
         if (camera != null) {
             Camera.Parameters  parameter = camera.getParameters();
             parameter.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             camera.setParameters(parameter);
         }
+      } else {
+        if (!mAutoFocousIng) {
+          if (mHandler != null && mHandler.hasMessages(R.id.auto_focus)) {
+            mHandler.removeMessages(R.id.auto_focus);
+          }
+          if (camera != null) {
+            Camera.Parameters  parameter = camera.getParameters();
+            parameter.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            camera.setParameters(parameter);
+          }
+          if (mHandler != null) {
+            Message message = mHandler.obtainMessage(R.id.auto_focus);
+            mHandler.sendMessageDelayed(message, AutoFocusCallback.AUTOFOCUS_INTERVAL_MS);
+          }
+        }
+      }
     }
     public String getFlashMode() {
       String flashMode = null;

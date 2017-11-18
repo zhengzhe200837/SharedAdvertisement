@@ -1,16 +1,23 @@
 package sharedadvertisement.wind.com.sharedadvertisement;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -37,7 +44,11 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.wind.adv.AdvancedOptionsActivity;
 import com.wind.adv.UserInfoActivity;
+
+import utils.CommonUtil;
+import utils.VideoInfo;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -65,10 +76,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager mSensorManager = null;
     private ImageView mUserInfo = null;
 
+    private ImageView mMoreInfo = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mMoreInfo = (ImageView)findViewById(R.id.more_info);
+        mMoreInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                CommonUtil.storeVideoInfo(MainActivity.this, new VideoInfo("/storage/emulated/0/DCIM/Camera/VID_20171117_170903.3gp", "name", "status"));
+                CommonUtil.storeVideoInfo(MainActivity.this, new VideoInfo(Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/VID_20171118_163311.3gp", "name", "status"));
+//                CommonUtil.storeVideoInfo(MainActivity.this, new VideoInfo("/system/media/video/gen30.mp4", "name", "status"));
+            }
+        });
+
         mUserInfo = (ImageView)findViewById(R.id.user_info);
         mUserInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 startSubActivity(MainActivity.this, UserInfoActivity.class);
             }
         });
+
         // 地图初始化
         mMapView = (MapView)findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
@@ -109,7 +134,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 addViewForMapView();
             }
         });
-        starLoc();
+        requestLocationPermission();
+
 
 //        mMainScan = (TextView)findViewById(R.id.main_scan);
 //        mMainScan.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +144,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //                startSubActivity(MainActivity.this, MessageAuthenticationActivity.class);
 //            }
 //        });
+    }
+
+    private void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
+                        Manifest.permission.CAMERA},
+                1);
     }
 
     private LatLng mTarget;
@@ -270,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     @Override
     protected void onResume() {
-        android.util.Log.d("zhengzhe", "---onresume()");
+        starLoc();
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
         mMapView.onResume();
         //为系统的方向传感器注册监听器
@@ -329,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMainDialogPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startSubActivity(MainActivity.this, AdvancedOptionsActivity.class);
             }
         });
         mDialog.setContentView(view);

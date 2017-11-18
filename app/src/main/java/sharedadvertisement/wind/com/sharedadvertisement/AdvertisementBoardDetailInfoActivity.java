@@ -2,6 +2,7 @@ package sharedadvertisement.wind.com.sharedadvertisement;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.wind.adv.AdvancedOptionsActivity;
 
 import org.w3c.dom.Text;
 
@@ -41,7 +44,7 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
         mPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startSubActivity(AdvertisementBoardDetailInfoActivity.this, AdvancedOptionsActivity.class);
             }
         });
         mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view);
@@ -50,6 +53,11 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
         rva.setApparatusDetail(mApparatusDetail);
         rva.setApparatusDetailValue(mApparatusDetailValue);
         mRecyclerView.setAdapter(rva);
+    }
+
+    private void startSubActivity(Context context, Class<?> clazz) {
+        Intent intent = new Intent(context, clazz);
+        startActivity(intent);
     }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<AdvertisementBoardDetailInfoActivity.RecyclerViewAdapter.ItemViewHolder> {

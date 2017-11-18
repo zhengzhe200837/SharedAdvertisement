@@ -237,8 +237,12 @@ public final class CameraManager {
       }
 
       //修改之后
+      android.util.Log.d("zz", "Resolution.x = " + screenResolution.x);
+      android.util.Log.d("zz", "Resolution.y = " + screenResolution.y);
       int width = screenResolution.x * 7 / 10;
       int height = screenResolution.y * 7 / 10;
+      android.util.Log.d("zz", "width = " + width);
+      android.util.Log.d("zz", "height = " + height);
 
       if(height >= width) { //竖屏
         height  = width;
@@ -248,7 +252,7 @@ public final class CameraManager {
 
       int leftOffset = (screenResolution.x - width) / 2;
       int topOffset = (screenResolution.y - height) / 2;
-      framingRect = new Rect(leftOffset, topOffset - 400, leftOffset + width, topOffset + height - 400);
+      framingRect = new Rect(leftOffset, topOffset - topOffset/2, leftOffset + width, topOffset + height - topOffset/2);
 
     }
     return framingRect;

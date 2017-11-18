@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import sharedadvertisement.wind.com.sharedadvertisement.R;
+
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,6 +18,7 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -205,6 +208,7 @@ public class AdvancedOptionsActivity extends Activity {
 	private void chooseVideo() {
        Intent intent = new Intent();
        intent.setType("video/*");
+		intent.setType("video/*;image/*");
        intent.setAction(Intent.ACTION_GET_CONTENT);
        startActivityForResult(intent, 1);
 	} 
@@ -214,7 +218,13 @@ public class AdvancedOptionsActivity extends Activity {
 	    if(requestCode == 1) {
 	    	if(resultCode == RESULT_OK){
 	    		Uri uri = data.getData();
-	    		upload_video.setText(uri.getPath());
+	    		Log.i("minos","uri.toString = " + toString() + "  uri.getPath() = " + uri.getPath());
+
+				Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+				cursor.moveToFirst();
+				int idx = cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
+
+	    		upload_video.setText(cursor.getString(idx));
 	    	}
 	    }
 	    super.onActivityResult(requestCode, resultCode, data);

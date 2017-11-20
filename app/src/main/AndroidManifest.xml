@@ -46,7 +46,8 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="jM0VW7ZhqWxU1ksHWiGFDSt5nIcdZvBL" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -93,6 +94,27 @@
             android:label="@string/my_video"
             android:theme="@style/AppThemeTitle"/>
 
+		 <activity 
+            android:name="com.wind.adv.PlayCountDownActivity"
+            android:theme="@style/AppThemeTitle" 
+            android:label="@string/count_down"
+            >
+        </activity>
+        
+         <activity 
+            android:name="com.wind.adv.SelectPlayTimeActivity"
+            android:theme="@style/AppThemeTitle" 
+            android:label="@string/select_playtime"
+            >
+        </activity>
+        
+         <activity 
+            android:name="com.wind.adv.WaitUploadVideoActivity"
+            android:theme="@style/AppThemeTitle" 
+            android:label="@string/upload_video"
+            >
+        </activity>
+		
     </application>
 
 </manifest>

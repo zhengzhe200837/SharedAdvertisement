@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
             }
         });
 
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         dialogWindow.setGravity(Gravity.BOTTOM);
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         lp.y = 0;
-        lp.height = 750;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
         mDialog.show();
     }

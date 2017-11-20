@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+       <TextView
+           android:id="@+id/play_time"
+           android:layout_width="match_parent"
+           android:layout_height="60dp"
+           android:background="#F0F0F0"
+           style="@style/TextColorBlack"
+           android:text="时长"
+           android:gravity="center"/>
+
+       <ListView
+           android:id="@+id/playtime_listView"
+           android:layout_below="@id/play_time"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:divider="#d8d8d8"
+           android:dividerHeight="1dp"/>
+
+       <View
+           android:id="@+id/line_view"
+           android:layout_below="@id/playtime_listView"
+           android:layout_width="match_parent"
+           android:layout_height="1dp"
+           android:background="#d8d8d8" />
+
+       <EditText
+           android:id="@+id/custom_edit"
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:layout_below="@id/line_view"
+           android:layout_marginLeft="15dp"
+           android:textSize="16sp"
+           android:background="@null"/>
+
+       <View
+           android:id="@+id/line2_view"
+           android:layout_below="@id/custom_edit"
+           android:layout_width="match_parent"
+           android:layout_height="1dp"
+           android:background="#d8d8d8" />
+
+       <TextView
+           android:id="@+id/confirm"
+           android:layout_width="40dp"
+           android:layout_height="40dp"
+           android:text="@string/ok"
+           android:textSize="16sp"
+           android:layout_alignParentBottom="true"
+           android:gravity="center"
+           android:layout_marginLeft="15dp"
+           android:layout_marginBottom="15dp"/>
+
+</RelativeLayout>

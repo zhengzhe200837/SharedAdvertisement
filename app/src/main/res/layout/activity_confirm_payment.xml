@@ -84,7 +84,8 @@
           android:layout_centerHorizontal="true"
           android:text="@string/confirm_payment"
           android:textSize="16sp"
-          android:background="@drawable/confirm_payment"/>
+          android:background="@drawable/confirm_payment"
+          android:onClick="openPopWindow" />
 
      <TextView
           android:id="@+id/cancle_text"

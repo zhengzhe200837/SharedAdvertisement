@@ -1,25 +1,40 @@
 package com.wind.adv;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import sharedadvertisement.wind.com.sharedadvertisement.AdvertisementBoardDetailInfoActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
 
 public class MyVideoActivity extends Activity {
 	private ContentResolver mContentResolver;
 	private List<Video> mVidoList = null;
+	private RecyclerView mRecyclerView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,64 +42,76 @@ public class MyVideoActivity extends Activity {
 		setContentView(R.layout.activity_myvideo);
 		mContentResolver = getContentResolver();
 		mVidoList = getVideos();
-		android.util.Log.d("zz", "getExternalStorageDirectory() = " + Environment.getExternalStorageDirectory());
-
-		SimpleAdapter adapter = new SimpleAdapter(this, getData(), R.layout.item_myorder_info,
-				 new String[]{"video_image", "video_title", "video_status"},
-				 new int[]{R.id.video_image, R.id.video_title, R.id.video_status});
-		ListView listview = findViewById(R.id.myVideo_listView);
-		listview.setAdapter(adapter);
+		mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+		RecyclerViewAdapter rva = new RecyclerViewAdapter(this);
+		rva.setVideoList(mVidoList);
+		rva.setContentResolver(mContentResolver);
+		mRecyclerView.setAdapter(rva);
 	}
-	
-	 private List<Map<String, Object>> getData() {
-		 List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		 for(int i = 0; i < mVidoList.size(); i++) {
-		 	 Video v = mVidoList.get(i);
-			 Map<String, Object> map = new HashMap<String, Object>();
-			 map.put("video_image", R.drawable.billboard_photos);
-			 map.put("video_title", v.path);
-			 map.put("video_status", v.name);
-			 list.add(map);
-		 }
-		 
-//		 Map<String, Object> map = new HashMap<String, Object>();
-//		 map.put("video_image", R.drawable.billboard_photos);
-//		 map.put("video_title", getString(R.string.user_rename));
-//		 map.put("video_status", getString(R.string.order_info1));
-//		 list.add(map);
-//
-//		 map = new HashMap<String, Object>();
-//		 map.put("video_image", R.drawable.billboard_photos);
-//		 map.put("video_title", getString(R.string.auto_name));
-//		 map.put("video_status", getString(R.string.order_info2));
-//		 list.add(map);
-//
-//		 map = new HashMap<String, Object>();
-//		 map.put("video_image", R.drawable.billboard_photos);
-//		 map.put("video_title", getString(R.string.billboard_name));
-//		 map.put("video_status", getString(R.string.order_info2));
-//		 list.add(map);
-		 
-		 return list;
-	 }
+
+	public static class RecyclerViewAdapter extends RecyclerView.Adapter<MyVideoActivity.RecyclerViewAdapter.ItemViewHolder> {
+		private Context mContext;
+		private List<Video> mVideoList;
+		private ContentResolver mContentResolver;
+
+		public RecyclerViewAdapter(Context context) {
+			mContext = context;
+		}
+		public void setVideoList(List<Video> list) {
+			mVideoList = list;
+		}
+		public void setContentResolver(ContentResolver cr) {
+			mContentResolver = cr;
+		}
+
+		@Override
+		public int getItemCount() {
+			return mVideoList.size();
+		}
+
+		@Override
+		public void onBindViewHolder(ItemViewHolder holder, int position) {
+			Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(mContentResolver, mVideoList.get(position).id, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+			String title = mVideoList.get(position).name;
+			String status = String.valueOf(mVideoList.get(position).duration);
+
+			holder.mVideoImage.setImageBitmap(bitmap);
+			holder.mVideoTitle.setText(title);
+			holder.mVideoStatus.setText(status);
+		}
+
+		@Override
+		public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+			View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_myorder_info, null);
+			return new ItemViewHolder(itemView);
+		}
+
+		public static class ItemViewHolder extends RecyclerView.ViewHolder {
+			public ImageView mVideoImage;
+			public TextView mVideoTitle;
+			public TextView mVideoStatus;
+			public ItemViewHolder(View view) {
+				super(view);
+				mVideoImage = (ImageView) view.findViewById(R.id.video_image);
+				mVideoTitle = (TextView)view.findViewById(R.id.video_title);
+				mVideoStatus = (TextView)view.findViewById(R.id.video_status);
+			}
+		}
+	}
 
 	/**
 	 * 获取本机视频列表
 	 * @return
 	 */
 	private List<Video> getVideos() {
-
 		List<Video> videos = new ArrayList<Video>();
-
 		Cursor c = null;
-		Uri uri = MediaStore.Video.Media.INTERNAL_CONTENT_URI;
 		try {
-			c = getContentResolver().query(uri, null, null, null,
-					MediaStore.Video.Media.DEFAULT_SORT_ORDER);
-			android.util.Log.d("zz", "count = " + c.getCount());
+			c = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null,
+					null);
 			while (c.moveToNext()) {
 				String path = c.getString(c.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));// 路径
-				android.util.Log.d("zz", "path = " + path);
 				int id = c.getInt(c.getColumnIndexOrThrow(MediaStore.Video.Media._ID));// 视频的id
 				String name = c.getString(c.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)); // 视频名称
 				String resolution = c.getString(c.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION)); //分辨率

@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                CommonUtil.storeVideoInfo(MainActivity.this, new VideoInfo("/storage/emulated/0/DCIM/Camera/VID_20171117_170903.3gp", "name", "status"));
-                CommonUtil.storeVideoInfo(MainActivity.this, new VideoInfo(Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/VID_20171118_163311.3gp", "name", "status"));
-//                CommonUtil.storeVideoInfo(MainActivity.this, new VideoInfo("/system/media/video/gen30.mp4", "name", "status"));
+                VideoInfo vi = new VideoInfo(null, "name", "status");
+                vi.setId(200);
+                CommonUtil.storeVideoInfo(MainActivity.this, vi);
             }
         });
 
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
-                        Manifest.permission.CAMERA},
+                        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                 1);
     }
 

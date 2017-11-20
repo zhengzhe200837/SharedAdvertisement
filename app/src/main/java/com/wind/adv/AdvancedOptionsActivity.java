@@ -212,8 +212,8 @@ public class AdvancedOptionsActivity extends Activity {
        intent.setAction(Intent.ACTION_GET_CONTENT);
        startActivityForResult(intent, 1);
 	} 
-	
-	@Override  
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 	    if(requestCode == 1) {
 	    	if(resultCode == RESULT_OK){

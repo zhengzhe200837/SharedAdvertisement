@@ -104,8 +104,6 @@
                 android:textSize="13sp"
                 android:textColor="#ffffff"/>
         </LinearLayout>
-            
     </LinearLayout>
-        
 </LinearLayout>
 

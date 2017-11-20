@@ -87,9 +87,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VideoInfo vi = new VideoInfo(null, "name", "status");
-                vi.setId(200);
-                CommonUtil.storeVideoInfo(MainActivity.this, vi);
+                
             }
         });
 

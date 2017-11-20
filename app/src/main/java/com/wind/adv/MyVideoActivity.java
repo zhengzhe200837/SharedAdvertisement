@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import sharedadvertisement.wind.com.sharedadvertisement.AdvertisementBoardDetailInfoActivity;
+import sharedadvertisement.wind.com.sharedadvertisement.DisplayVideoActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
 
 public class MyVideoActivity extends Activity {
@@ -72,6 +74,16 @@ public class MyVideoActivity extends Activity {
 
 		@Override
 		public void onBindViewHolder(ItemViewHolder holder, int position) {
+			final String videoPath = mVideoList.get(position).path;
+			holder.itemView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					android.util.Log.d("zz", "itemview + click");
+					Intent intent = new Intent(mContext, DisplayVideoActivity.class);
+					intent.putExtra(DisplayVideoActivity.VIDEOPATHKEY, videoPath);
+					mContext.startActivity(intent);
+				}
+			});
 			Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(mContentResolver, mVideoList.get(position).id, MediaStore.Video.Thumbnails.MICRO_KIND, null);
 			String title = mVideoList.get(position).name;
 			String status = String.valueOf(mVideoList.get(position).duration);

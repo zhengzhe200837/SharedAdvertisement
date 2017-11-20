@@ -114,6 +114,10 @@
             android:label="@string/upload_video"
             >
         </activity>
+        <activity
+            android:name=".DisplayVideoActivity"
+            android:theme="@style/AppThemeTitle" >
+        </activity>
 		
     </application>
 

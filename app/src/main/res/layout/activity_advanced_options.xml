@@ -3,15 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-       <TextView
+        <FrameLayout
             android:id="@+id/Advanced_Options"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="#F0F0F0"
-            style="@style/TextColorBlack"
-            android:text="@string/Advanced_Options"
-            android:paddingLeft="20dp"
-            android:gravity="center_vertical"/>
+            android:background="#F0F0F0">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/TextColorBlack"
+                android:text="@string/upload_video_title"
+                android:gravity="center"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/advanced_icon"
+                    android:layout_marginRight="10dp"/>
+            </LinearLayout>
+        </FrameLayout>
 
        <ImageView
            android:id="@+id/video_image"

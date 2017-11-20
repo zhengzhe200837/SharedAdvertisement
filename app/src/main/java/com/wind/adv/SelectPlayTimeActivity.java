@@ -12,6 +12,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -62,6 +63,9 @@ public class SelectPlayTimeActivity extends Activity{
 					intent.putExtra("select_playtime", editNumber);
 					SelectPlayTimeActivity.this.setResult(RESULT_OK, intent);
 					SelectPlayTimeActivity.this.finish();
+				}else {
+					mCustomEdit.setText("");
+					mCustomEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
 				}
 			}
 		});

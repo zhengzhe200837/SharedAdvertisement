@@ -66,4 +66,5 @@
     <string name="select_time_erro">选择播放时间应超过当前时间5分钟以上，以便正常审核播放，请重新选择播放时间，谢谢！</string>
     <string name="select_playtime">选择播放时间</string>
     <string name="count_down">播放倒计时</string>
+    <string name="upload_video_title">上传片源</string>
 </resources>

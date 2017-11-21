@@ -78,7 +78,6 @@ public class MyVideoActivity extends Activity {
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					android.util.Log.d("zz", "itemview + click");
 					Intent intent = new Intent(mContext, DisplayVideoActivity.class);
 					intent.putExtra(DisplayVideoActivity.VIDEOPATHKEY, videoPath);
 					mContext.startActivity(intent);

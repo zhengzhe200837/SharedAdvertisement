@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import sharedadvertisement.wind.com.sharedadvertisement.DisplayVideoActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
 import utils.CommonUtil;
 import utils.VideoInfo;
@@ -12,6 +13,7 @@ import utils.VideoInfo;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
@@ -72,6 +74,15 @@ public class MyOrderActivity extends Activity {
 
 		@Override
 		public void onBindViewHolder(MyOrderActivity.RecyclerViewAdapter.ItemViewHolder holder, int position) {
+			final String videoPath = mVideoList.get(position).getPath();
+			holder.itemView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(mContext, DisplayVideoActivity.class);
+					intent.putExtra(DisplayVideoActivity.VIDEOPATHKEY, videoPath);
+					mContext.startActivity(intent);
+				}
+			});
 			Bitmap bitmap = null;
 			String title = null;
 			String status = null;

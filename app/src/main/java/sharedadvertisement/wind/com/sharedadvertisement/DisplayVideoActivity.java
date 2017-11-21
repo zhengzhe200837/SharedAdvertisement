@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -25,6 +26,7 @@ public class DisplayVideoActivity extends Activity implements SurfaceHolder.Call
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.display_video_activty_layout);
         mSurfaceView = (SurfaceView)findViewById(R.id.surface_view);
         mVideoPath = getIntent().getStringExtra(VIDEOPATHKEY);

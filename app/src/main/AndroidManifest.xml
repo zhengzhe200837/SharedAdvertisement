@@ -118,6 +118,13 @@
             android:name=".DisplayVideoActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
+        <activity
+            android:name=".ChangeClarityActivity"
+            android:theme="@style/AppTheme"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="在全屏时可以切换清晰度"
+            android:screenOrientation="portrait">
+        </activity>
 		
     </application>
 

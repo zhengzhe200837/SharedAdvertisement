@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import sharedadvertisement.wind.com.sharedadvertisement.ChangeClarityActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.DisplayVideoActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
 import utils.CommonUtil;
@@ -78,8 +79,11 @@ public class MyOrderActivity extends Activity {
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(mContext, DisplayVideoActivity.class);
-					intent.putExtra(DisplayVideoActivity.VIDEOPATHKEY, videoPath);
+//					Intent intent = new Intent(mContext, DisplayVideoActivity.class);
+//					intent.putExtra(DisplayVideoActivity.VIDEOPATHKEY, videoPath);
+//					mContext.startActivity(intent);
+					Intent intent = new Intent(mContext, ChangeClarityActivity.class);
+					intent.putExtra(ChangeClarityActivity.VIDEOPATH, videoPath);
 					mContext.startActivity(intent);
 				}
 			});
@@ -87,14 +91,22 @@ public class MyOrderActivity extends Activity {
 			String title = null;
 			String status = null;
 			if (mVideoList.get(position) != null) {
-				bitmap = MediaStore.Video.Thumbnails.getThumbnail(mContentResolver, mVideoList.get(position).getId(), MediaStore.Video.Thumbnails.MICRO_KIND, null);
+//				bitmap = MediaStore.Video.Thumbnails.getThumbnail(mContentResolver, mVideoList.get(position).getId(), MediaStore.Video.Thumbnails.MICRO_KIND, null);
 				title = mVideoList.get(position).getName();
 				status = mVideoList.get(position).getStatus();
 			}
 
-			holder.mVideoImage.setImageBitmap(bitmap);
+			holder.mVideoImage.setImageBitmap(getVideoFirstFrame(videoPath));
 			holder.mVideoTitle.setText(title);
 			holder.mVideoStatus.setText(status);
+		}
+
+		private Bitmap getVideoFirstFrame(String path) {
+			MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+			mmr.setDataSource(path);
+			String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+			Bitmap bitmap = mmr.getFrameAtTime(1,MediaMetadataRetriever.OPTION_CLOSEST_SYNC); // 获取指定时间点的帧图片  单位是微秒
+			return bitmap;
 		}
 
 		@Override

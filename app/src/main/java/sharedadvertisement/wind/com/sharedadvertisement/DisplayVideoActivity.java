@@ -63,22 +63,23 @@ public class DisplayVideoActivity extends Activity implements SurfaceHolder.Call
                 int originalVideoWidth = mMediaPlayer.getVideoWidth();
                 int originalVideoHeight = mMediaPlayer.getVideoHeight();
                 FrameLayout.LayoutParams lllp = (FrameLayout.LayoutParams)mSurfaceView.getLayoutParams();
-                if(originalVideoWidth > mDisplay.getWidth() || originalVideoHeight > mDisplay.getHeight()) {
-                    float wRatio = (float)originalVideoWidth/(float)mDisplay.getWidth();
-                    float hRatio = (float)originalVideoHeight/(float)mDisplay.getHeight();
-                    float ratio = Math.max(wRatio, hRatio);
-                    int videoWidth = (int)Math.ceil((float)originalVideoWidth/ratio);
-                    int videoHeight = (int)Math.ceil((float)originalVideoHeight/ratio);
-                    lllp.width = videoWidth;
-                    lllp.height = videoHeight;
-                    mSurfaceView.setLayoutParams(lllp);
-                    mMediaPlayer.start();
-                } else {
-                    lllp.width = originalVideoWidth;
-                    lllp.height = originalVideoHeight;
-                    mSurfaceView.setLayoutParams(lllp);
-                    mMediaPlayer.start();
-                }
+//                if(originalVideoWidth > mDisplay.getWidth() || originalVideoHeight > mDisplay.getHeight()) {
+//                    float wRatio = (float)originalVideoWidth/(float)mDisplay.getWidth();
+//                    float hRatio = (float)originalVideoHeight/(float)mDisplay.getHeight();
+//                    float ratio = Math.max(wRatio, hRatio);
+//                    int videoWidth = (int)Math.ceil((float)originalVideoWidth/ratio);
+//                    int videoHeight = (int)Math.ceil((float)originalVideoHeight/ratio);
+//                    lllp.width = videoWidth;
+//                    lllp.height = videoHeight;
+//                    mSurfaceView.setLayoutParams(lllp);
+//                    mMediaPlayer.start();
+//                } else {
+//                    lllp.width = originalVideoWidth;
+//                    lllp.height = originalVideoHeight;
+//                    mSurfaceView.setLayoutParams(lllp);
+//                    mMediaPlayer.start();
+//                }
+                mMediaPlayer.start();
             }
         });
         mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {

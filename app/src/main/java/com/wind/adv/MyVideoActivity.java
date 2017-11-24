@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import sharedadvertisement.wind.com.sharedadvertisement.AdvertisementBoardDetailInfoActivity;
+import sharedadvertisement.wind.com.sharedadvertisement.ChangeClarityActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.DisplayVideoActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
 
@@ -78,16 +80,21 @@ public class MyVideoActivity extends Activity {
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(mContext, DisplayVideoActivity.class);
-					intent.putExtra(DisplayVideoActivity.VIDEOPATHKEY, videoPath);
+//					Intent intent = new Intent(mContext, DisplayVideoActivity.class);
+//					intent.putExtra(DisplayVideoActivity.VIDEOPATHKEY, videoPath);
+//					mContext.startActivity(intent);
+					Intent intent = new Intent(mContext, ChangeClarityActivity.class);
+					intent.putExtra(ChangeClarityActivity.VIDEOPATH, videoPath);
 					mContext.startActivity(intent);
 				}
 			});
-			Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(mContentResolver, mVideoList.get(position).id, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+//			Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(mContentResolver,
+//					mVideoList.get(position).id, MediaStore.Video.Thumbnails.MICRO_KIND, null);   获取视频缩略图
+
 			String title = mVideoList.get(position).name;
 			String status = String.valueOf(mVideoList.get(position).duration);
 
-			holder.mVideoImage.setImageBitmap(bitmap);
+			holder.mVideoImage.setImageBitmap(getVideoFirstFrame(videoPath));
 			holder.mVideoTitle.setText(title);
 			holder.mVideoStatus.setText(status);
 		}
@@ -96,6 +103,14 @@ public class MyVideoActivity extends Activity {
 		public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 			View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_myorder_info, null);
 			return new ItemViewHolder(itemView);
+		}
+
+		private Bitmap getVideoFirstFrame(String path) {
+			MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+			mmr.setDataSource(path);
+			String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+			Bitmap bitmap = mmr.getFrameAtTime(1,MediaMetadataRetriever.OPTION_CLOSEST_SYNC); // 获取指定时间点的帧图片  单位是微秒
+			return bitmap;
 		}
 
 		public static class ItemViewHolder extends RecyclerView.ViewHolder {

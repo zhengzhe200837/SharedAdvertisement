@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import sharedadvertisement.wind.com.sharedadvertisement.ChangeClarityActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.DisplayVideoActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
@@ -31,37 +34,68 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.network.Network;
+import com.network.model.MyOrderItemInfo;
+
 public class MyOrderActivity extends Activity {
-	private List<VideoInfo> mList;
+//	private List<VideoInfo> mList;
+	private List<MyOrderItemInfo> mList;
 	private RecyclerView mRecyclerView;
 	private ContentResolver mContentResolver;
+	private MyOrderActivity.RecyclerViewAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_myorder);
 		mContentResolver = getContentResolver();
-		mList = new ArrayList<VideoInfo>();
-		for(int i = 1; i <= CommonUtil.ORDER_TOTAL_SIZE; i++) {
-			mList.add(CommonUtil.getVideoInfo(this, i));
-		}
+//		mList = new ArrayList<VideoInfo>();
+//		for(int i = 1; i <= CommonUtil.ORDER_TOTAL_SIZE; i++) {
+//			mList.add(CommonUtil.getVideoInfo(this, i));
+//		}
+		mList = new ArrayList<MyOrderItemInfo>();
 		mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-		MyOrderActivity.RecyclerViewAdapter rva = new MyOrderActivity.RecyclerViewAdapter(this);
-		rva.setVideoList(mList);
-		rva.setContentResolver(mContentResolver);
-		mRecyclerView.setAdapter(rva);
+		adapter = new MyOrderActivity.RecyclerViewAdapter(this);
+		adapter.setVideoList(mList);
+		adapter.setContentResolver(mContentResolver);
+		mRecyclerView.setAdapter(adapter);
+		getDataFromNetwork();
+	}
+
+	private void getDataFromNetwork() {
+		Network.getMyOrder().getMyOrder()
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Consumer<List<MyOrderItemInfo>>() {
+					@Override
+					public void accept(List<MyOrderItemInfo> myOrderItemInfos) throws Exception {
+						for (int i = 0; i < myOrderItemInfos.size(); i++) {
+							android.util.Log.d("zz", "name = " + myOrderItemInfos.get(i).getVideoName());
+							android.util.Log.d("zz", "url = " + myOrderItemInfos.get(i).getVideoUrl());
+							android.util.Log.d("zz", "status = " + myOrderItemInfos.get(i).getStatus());
+						}
+//						mList = myOrderItemInfos;
+						adapter.setVideoList(myOrderItemInfos);
+						adapter.notifyDataSetChanged();
+					}
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+						android.util.Log.d("zz", "error = " + throwable.toString());
+					}
+				});
 	}
 
 	public static class RecyclerViewAdapter extends RecyclerView.Adapter<MyOrderActivity.RecyclerViewAdapter.ItemViewHolder> {
 		private Context mContext;
-		private List<VideoInfo> mVideoList;
+		private List<MyOrderItemInfo> mVideoList;
 		private ContentResolver mContentResolver;
 
 		public RecyclerViewAdapter(Context context) {
 			mContext = context;
 		}
-		public void setVideoList(List<VideoInfo> list) {
+		public void setVideoList(List<MyOrderItemInfo> list) {
 			mVideoList = list;
 		}
 		public void setContentResolver(ContentResolver cr) {
@@ -75,7 +109,8 @@ public class MyOrderActivity extends Activity {
 
 		@Override
 		public void onBindViewHolder(MyOrderActivity.RecyclerViewAdapter.ItemViewHolder holder, int position) {
-			final String videoPath = mVideoList.get(position).getPath();
+//			final String videoPath = mVideoList.get(position).getPath();
+			final String videoPath = mVideoList.get(position).getVideoUrl();
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -92,7 +127,8 @@ public class MyOrderActivity extends Activity {
 			String status = null;
 			if (mVideoList.get(position) != null) {
 //				bitmap = MediaStore.Video.Thumbnails.getThumbnail(mContentResolver, mVideoList.get(position).getId(), MediaStore.Video.Thumbnails.MICRO_KIND, null);
-				title = mVideoList.get(position).getName();
+//				title = mVideoList.get(position).getName();
+				title = mVideoList.get(position).getVideoName();
 				status = mVideoList.get(position).getStatus();
 			}
 
@@ -103,7 +139,8 @@ public class MyOrderActivity extends Activity {
 
 		private Bitmap getVideoFirstFrame(String path) {
 			MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-			mmr.setDataSource(path);
+//			mmr.setDataSource(path);  //播放本地视频
+			mmr.setDataSource(path, new HashMap<String, String>());  //获取网络视频
 			String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 			Bitmap bitmap = mmr.getFrameAtTime(1,MediaMetadataRetriever.OPTION_CLOSEST_SYNC); // 获取指定时间点的帧图片  单位是微秒
 			return bitmap;

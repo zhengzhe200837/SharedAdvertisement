@@ -25,6 +25,9 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.network.Network;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,9 +83,11 @@ public class MyVideoActivity extends Activity {
 			holder.itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					//播放视频 surface
 //					Intent intent = new Intent(mContext, DisplayVideoActivity.class);
 //					intent.putExtra(DisplayVideoActivity.VIDEOPATHKEY, videoPath);
 //					mContext.startActivity(intent);
+					//播放视频 框架
 					Intent intent = new Intent(mContext, ChangeClarityActivity.class);
 					intent.putExtra(ChangeClarityActivity.VIDEOPATH, videoPath);
 					mContext.startActivity(intent);

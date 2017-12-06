@@ -11,9 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.network.Network;
+import com.network.model.AdvertisementBoardDetailInfo;
 import com.wind.adv.AdvancedOptionsActivity;
 
 import org.w3c.dom.Text;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by zhengzhe on 2017/11/13.
@@ -27,11 +33,22 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
     private String[] mApparatusDetailValue = new String[] {
             "固定设备", "餐馆", "LED", "横屏", "1300cm x 750cm"
     };
+    private String mCurrentUrl;
+    private AdvertisementBoardDetailInfo mCurrentAdvertisementBoardDetailInfo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.advertisement_board_detail_info_layout);
+//        network start
+//        mCurrentUrl = getIntent().getStringExtra(MainActivity.CURRENTADVERTISEMENTBOARDDETAILINFOURL);
+//        mCurrentAdvertisementBoardDetailInfo = getIntent().getParcelableExtra(MainActivity.CURRENTADVERTISEMENTBOARDDETAILINFO);
+//        if (mCurrentAdvertisementBoardDetailInfo == null) {
+//            getAdvertisementBoardDetailInfo(mCurrentUrl);
+//        }
+//        network end
+
         mApparatusDetail = getResources().getStringArray(R.array.abdi_apparatus_detail);
         mCancel = (TextView) findViewById(R.id.adbi_cancel);
         mCancel.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +71,25 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
         rva.setApparatusDetailValue(mApparatusDetailValue);
         mRecyclerView.setAdapter(rva);
     }
+
+//    network start
+    private void getAdvertisementBoardDetailInfo(String url) {
+        Network.getAdvertisementBoardDetailInfoApi(url).getAdvertisementBoardDetailInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<AdvertisementBoardDetailInfo>() {
+                    @Override
+                    public void accept(AdvertisementBoardDetailInfo advertisementBoardDetailInfo) throws Exception {
+                        mCurrentAdvertisementBoardDetailInfo = advertisementBoardDetailInfo;
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+    }
+//    network end
 
     private void startSubActivity(Context context, Class<?> clazz) {
         Intent intent = new Intent(context, clazz);

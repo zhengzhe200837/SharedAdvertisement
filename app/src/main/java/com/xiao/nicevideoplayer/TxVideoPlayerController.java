@@ -328,6 +328,7 @@ public class TxVideoPlayerController
 
     @Override
     protected void reset() {
+        android.util.Log.d("zz", "--zz + reset()");
         topBottomVisible = false;
         cancelUpdateProgressTimer();
         cancelDismissTopBottomTimer();
@@ -479,6 +480,7 @@ public class TxVideoPlayerController
             mNiceVideoPlayer.restart();
         }
         long position = (long) (mNiceVideoPlayer.getDuration() * seekBar.getProgress() / 100f);
+        android.util.Log.d("zz", "--zz + position = " + position);
         mNiceVideoPlayer.seekTo(position);
         startDismissTopBottomTimer();
     }
@@ -487,9 +489,12 @@ public class TxVideoPlayerController
     protected void updateProgress() {
         long position = mNiceVideoPlayer.getCurrentPosition();
         long duration = mNiceVideoPlayer.getDuration();
+        android.util.Log.d("zz", "--zz + updateProgress() + position = " + position);
+        android.util.Log.d("zz", "--zz + updateProgress() + duration = " + duration);
         int bufferPercentage = mNiceVideoPlayer.getBufferPercentage();
         mSeek.setSecondaryProgress(bufferPercentage);
         int progress = (int) (100f * position / duration);
+        android.util.Log.d("zz", "--zz + updateProgress() + progress = " + progress);
         mSeek.setProgress(progress);
         mPosition.setText(NiceUtil.formatTime(position));
         mDuration.setText(NiceUtil.formatTime(duration));
@@ -503,6 +508,7 @@ public class TxVideoPlayerController
         long newPosition = (long) (duration * newPositionProgress / 100f);
         mChangePositionCurrent.setText(NiceUtil.formatTime(newPosition));
         mChangePositionProgress.setProgress(newPositionProgress);
+        android.util.Log.d("zz", "--zz + showChangePosition() + newPositionProgress = " + newPositionProgress);
         mSeek.setProgress(newPositionProgress);
         mPosition.setText(NiceUtil.formatTime(newPosition));
     }

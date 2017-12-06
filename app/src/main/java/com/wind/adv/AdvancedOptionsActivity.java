@@ -1,5 +1,6 @@
 package com.wind.adv;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,6 +38,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.network.Network;
 
 public class AdvancedOptionsActivity extends Activity {
 	private EditText editStartTimeText;
@@ -358,9 +361,12 @@ public class AdvancedOptionsActivity extends Activity {
 	}
 
 	private void setVideoPathAndId(String path, int id, String name, String status){
-		VideoInfo vi = new VideoInfo(path, name, status);
-		vi.setId(id);
-		CommonUtil.storeVideoInfo(this, vi);
+//		zhengzhe start
+//		VideoInfo vi = new VideoInfo(path, name, status);
+//		vi.setId(id);
+//		CommonUtil.storeVideoInfo(this, vi);
+		Network.uploadVideoFile(new File(path));
+//		zhengzhe end
 	}
 
 	private void showDialog() {

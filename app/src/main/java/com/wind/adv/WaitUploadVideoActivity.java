@@ -21,6 +21,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.network.Network;
+
+import java.io.File;
+
 public class WaitUploadVideoActivity extends Activity {
 	private EditText upload_video;
 	private Button mDeleteVideo;
@@ -126,9 +130,12 @@ public class WaitUploadVideoActivity extends Activity {
 	}
 
 	private void setVideoPathAndId(String path, int id, String name, String status){
-		VideoInfo vi = new VideoInfo(path, name, status);
-		vi.setId(id);
-		CommonUtil.storeVideoInfo(this, vi);
+//		zhengzhe start
+//		VideoInfo vi = new VideoInfo(path, name, status);
+//		vi.setId(id);
+//		CommonUtil.storeVideoInfo(this, vi);
+		Network.uploadVideoFile(new File(path));
+//		zhengzhe end
 	}
 	
 	private void initConfirmAndCancleListener() {

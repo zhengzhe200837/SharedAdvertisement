@@ -227,6 +227,7 @@ public class NiceVideoPlayer extends FrameLayout
 
     @Override
     public void seekTo(long pos) {
+        android.util.Log.d("zz", "--zz + seekTo() + pos = " + pos);
         if (mMediaPlayer != null) {
             mMediaPlayer.seekTo(pos);
         }
@@ -322,6 +323,12 @@ public class NiceVideoPlayer extends FrameLayout
 
     @Override
     public long getCurrentPosition() {
+        if (mMediaPlayer != null) {
+            android.util.Log.d("zz", "--zz + getCurrentPosition() + mMediaPlayer != null");
+        } else {
+            android.util.Log.d("zz", "--zz + getCurrentPosition() + mMediaPlayer == null");
+        }
+
         return mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : 0;
     }
 
@@ -412,6 +419,7 @@ public class NiceVideoPlayer extends FrameLayout
         mMediaPlayer.setOnBufferingUpdateListener(mOnBufferingUpdateListener);
         // 设置dataSource
         try {
+            android.util.Log.d("zz", "--zz + openMediaPlayer() + mUrl = " + mUrl);
             mMediaPlayer.setDataSource(mContext.getApplicationContext(), Uri.parse(mUrl), mHeaders);
             if (mSurface == null) {
                 mSurface = new Surface(mSurfaceTexture);

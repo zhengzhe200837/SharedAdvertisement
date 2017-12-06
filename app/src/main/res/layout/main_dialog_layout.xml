@@ -28,6 +28,7 @@
         android:paddingBottom="10dp"
         >
         <ImageView
+            android:id="@+id/picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/ad_de_icon"/>
@@ -47,6 +48,7 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/price_icon"/>
                 <TextView
+                    android:id="@+id/price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/main_dialog_price"
@@ -63,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/main_dialog_location"/>
                 <TextView
+                    android:id="@+id/location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/main_dialog_location"
@@ -79,6 +82,7 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/location_icon"/>
                 <TextView
+                    android:id="@+id/distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/main_dialog_distance"

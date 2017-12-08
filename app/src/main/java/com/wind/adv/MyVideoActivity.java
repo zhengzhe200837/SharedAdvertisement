@@ -91,6 +91,7 @@ public class MyVideoActivity extends Activity {
 					Intent intent = new Intent(mContext, ChangeClarityActivity.class);
 					intent.putExtra(ChangeClarityActivity.VIDEOPATH, videoPath);
 					mContext.startActivity(intent);
+//					Network.uploadVideoFile(mContext, new File(videoPath));  //测试上传视频代码
 				}
 			});
 //			Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(mContentResolver,

@@ -95,6 +95,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Network.getLocationInfoApi().getLocationInfo(new AdvertisementBoardDetailInfo(30, "http"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        android.util.Log.d("zz", "main + s = " + s);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        android.util.Log.d("zz", "main + error = " + throwable.toString());
+                    }
+                });
             }
         });
         mUserInfo = (ImageView)findViewById(R.id.user_info);

@@ -1,27 +1,26 @@
 package com.network;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.network.ExceptionInterceptor.CreateInterceptor;
 import com.network.api.AdvertisementBoardDetailInfoApi;
 import com.network.api.LocationInfoApi;
 import com.network.api.MyOrderApi;
 import com.network.api.UploadMyVideoApi;
-import com.network.model.UploadMyVideoResult;
+import com.network.model.VideoUrl;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -42,11 +41,18 @@ public class Network {
     private static UploadMyVideoApi mUploadMyVideoApi;
 
     public static UploadMyVideoApi getUploadMyVideoApi() {
+        GsonBuilder gb = new GsonBuilder();
+        Gson gson = gb.setLenient().create();  //返回数据不是gson格式的处理方法
+
+//        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//        builder.addInterceptor(new CreateInterceptor());
+//        OkHttpClient okHttpClient = builder.build();  //错误码拦截器
+
         if (mUploadMyVideoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://192.168.31.109:8080")
                     .client(mOkHttpClient)
-                    .addConverterFactory(mGsonConverterFactory)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .build();
             mUploadMyVideoApi = retrofit.create(UploadMyVideoApi.class);
@@ -54,7 +60,8 @@ public class Network {
         return mUploadMyVideoApi;
     }
 
-    public static void uploadVideoFile(File file) {
+    public static void uploadVideoFile(final Context context, File file) {
+        Toast.makeText(context, "开始上传", Toast.LENGTH_SHORT).show();
         //MediaType 为全部类型
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(),
@@ -74,17 +81,21 @@ public class Network {
 //                    }
 //                });
         getUploadMyVideoApi().uploadMyVideo(body)
+//                .retryWhen(new CreateInterceptor.RetryWhen202Happen(3, 2000))  //重试
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        android.util.Log.d("zz", "Network + s = " + s);
+                        android.util.Log.d("zz", "Network + uploadVideoFile + s = " + s);
+                        if ("success".equals(s)) {
+                            Toast.makeText(context, "上传完成", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        android.util.Log.d("zz", "Network + throwable = " + throwable.toString());
+                        android.util.Log.d("zz", "Network + uploadVideoFile + throwable = " + throwable.toString());
                     }
                 });
     }

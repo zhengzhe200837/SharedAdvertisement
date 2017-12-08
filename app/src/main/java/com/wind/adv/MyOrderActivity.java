@@ -33,9 +33,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.network.Network;
 import com.network.model.MyOrderItemInfo;
+import com.network.model.VideoUrl;
 
 public class MyOrderActivity extends Activity {
 //	private List<VideoInfo> mList;
@@ -64,6 +66,7 @@ public class MyOrderActivity extends Activity {
 	}
 
 	private void getDataFromNetwork() {
+		Toast.makeText(this, "开始获取我的订单", Toast.LENGTH_SHORT).show();
 		Network.getMyOrder().getMyOrder()
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
@@ -75,7 +78,6 @@ public class MyOrderActivity extends Activity {
 							android.util.Log.d("zz", "url = " + myOrderItemInfos.get(i).getVideoUrl());
 							android.util.Log.d("zz", "status = " + myOrderItemInfos.get(i).getStatus());
 						}
-//						mList = myOrderItemInfos;
 						adapter.setVideoList(myOrderItemInfos);
 						adapter.notifyDataSetChanged();
 					}
@@ -139,8 +141,11 @@ public class MyOrderActivity extends Activity {
 
 		private Bitmap getVideoFirstFrame(String path) {
 			MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-//			mmr.setDataSource(path);  //播放本地视频
-			mmr.setDataSource(path, new HashMap<String, String>());  //获取网络视频
+			if (path.startsWith("http")) {
+				mmr.setDataSource(path, new HashMap<String, String>());  //获取网络视频
+			} else {
+				mmr.setDataSource(path);  //播放本地视频
+			}
 			String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 			Bitmap bitmap = mmr.getFrameAtTime(1,MediaMetadataRetriever.OPTION_CLOSEST_SYNC); // 获取指定时间点的帧图片  单位是微秒
 			return bitmap;

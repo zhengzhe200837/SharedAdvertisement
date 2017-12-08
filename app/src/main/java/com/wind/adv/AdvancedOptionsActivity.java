@@ -365,7 +365,7 @@ public class AdvancedOptionsActivity extends Activity {
 //		VideoInfo vi = new VideoInfo(path, name, status);
 //		vi.setId(id);
 //		CommonUtil.storeVideoInfo(this, vi);
-		Network.uploadVideoFile(new File(path));
+		Network.uploadVideoFile(this, new File(path));
 //		zhengzhe end
 	}
 

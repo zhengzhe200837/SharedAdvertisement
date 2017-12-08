@@ -10,6 +10,12 @@ import android.os.Parcelable;
 public class AdvertisementBoardDetailInfo implements Parcelable{
     private int price;
     private String picture_url;
+
+    public AdvertisementBoardDetailInfo(int price, String url) {
+        this.price = price;
+        this.picture_url = url;
+    }
+
     public void setPrice(int price) {
         this.price = price;
     }

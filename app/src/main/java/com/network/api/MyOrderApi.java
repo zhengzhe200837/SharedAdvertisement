@@ -15,6 +15,8 @@ import retrofit2.http.Query;
  */
 
 public interface MyOrderApi {
-    @GET("/SharedAdvertisement/MyOrderServlet")
+//    @GET("/SharedAdvertisement/MyOrderServlet")
+//    Observable<List<MyOrderItemInfo>> getMyOrder();
+    @GET("/simpleDemo/LoadMyOrderInfoServlet")
     Observable<List<MyOrderItemInfo>> getMyOrder();
 }

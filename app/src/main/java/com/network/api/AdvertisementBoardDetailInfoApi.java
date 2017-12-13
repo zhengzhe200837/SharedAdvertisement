@@ -12,8 +12,8 @@ import retrofit2.http.Query;
  */
 
 public interface AdvertisementBoardDetailInfoApi {
-//    @GET("/simpleDemo/HandleDataBaseServlet")
-//    Observable<AdvertisementBoardDetailInfo> getAdvertisementBoardDetailInfo(@Query("tableName") String tableName, @Query("todo") String todo);
-    @GET("/SharedAdvertisement/SharedAdvertisement")
-    Observable<AdvertisementBoardDetailInfo> getAdvertisementBoardDetailInfo();
+    @GET("/simpleDemo/HandleDataBaseServlet")
+    Observable<AdvertisementBoardDetailInfo> getAdvertisementBoardDetailInfo(@Query("tableName") String tableName, @Query("todo") String todo);
+//    @GET("/SharedAdvertisement/SharedAdvertisement")
+//    Observable<AdvertisementBoardDetailInfo> getAdvertisementBoardDetailInfo();
 }

@@ -11,6 +11,8 @@ import retrofit2.http.POST;
  */
 
 public interface UploadMyOrderInfoApi {
-    @POST("/SharedAdvertisement/SharedAdvertisement")
+//    @POST("/SharedAdvertisement/SharedAdvertisement")
+//    Observable<String> uploadMyOrderInfo(@Body UploadMyOrderInfo orderInfo);
+    @POST("/simpleDemo/HandleDataBaseServlet")
     Observable<String> uploadMyOrderInfo(@Body UploadMyOrderInfo orderInfo);
 }

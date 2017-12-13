@@ -91,7 +91,7 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
         mBillBoardName.setText(data.getEquipmentName());
         mBillBoardPrice.setText(String.valueOf(data.getPrice()) + "元/秒");
         mBillBoardLocation.setText(data.getAddress());
-        mBillBoardPhone.setText(data.getPhone());
+        mBillBoardPhone.setText(data.getBusinessPhone());
         Glide.with(this).load(data.getPicture_url()).into(mBillBoardPicture);
     }
 
@@ -104,7 +104,7 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
     }
 
     private void getAdvertisementBoardDetailInfo() {
-        Network.getAdvertisementBoardDetailInfoApi().getAdvertisementBoardDetailInfo() //"billBoardInfo", "query"
+        Network.getAdvertisementBoardDetailInfoApi().getAdvertisementBoardDetailInfo("billBoardInfo", "query") //"orderInfo", "query"
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<AdvertisementBoardDetailInfo>() {

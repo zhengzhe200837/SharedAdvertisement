@@ -17,11 +17,12 @@ public class UploadMyOrderInfo {
     private int durationTime;
     private int playTimes;
     private int orderStatus;
+    private String todo;
 
     public UploadMyOrderInfo(String tableName, int userId, int billBoardId, int playStartYear,
                              int playStartMonth, int playStartDate, int playStartHour, int playStartMinute,
                              long totalPrice, int durationTime, int playTimes,
-                             int orderStatus) {
+                             int orderStatus, String todo) {
         this.tableName = tableName;
         this.userId = userId;
         this.billBoardId = billBoardId;
@@ -34,6 +35,7 @@ public class UploadMyOrderInfo {
         this.durationTime = durationTime;
         this.playTimes = playTimes;
         this.orderStatus = orderStatus;
+        this.todo = todo;
     }
 
     public static class UploadMyOrderInfoBuilder{
@@ -49,12 +51,17 @@ public class UploadMyOrderInfo {
         private int durationTime;
         private int playTimes;
         private int orderStatus;
+        private String todo;
         public UploadMyOrderInfoBuilder() {
         }
         public UploadMyOrderInfo build() {
             return new UploadMyOrderInfo(tableName, userId, billBoardId, playStartYear,
                 playStartMonth, playStartDate, playStartHour, playStartMinute,
-                totalPrice, durationTime, playTimes, orderStatus);
+                totalPrice, durationTime, playTimes, orderStatus, todo);
+        }
+        public UploadMyOrderInfoBuilder setTodo(String todo) {
+            this.todo = todo;
+            return this;
         }
 
         public UploadMyOrderInfoBuilder setTotalPrice(long totalPrice) {

@@ -53,6 +53,7 @@ import com.network.model.MyOrderItemInfo;
 import com.wind.adv.AdvancedOptionsActivity;
 import com.wind.adv.UserInfoActivity;
 
+import java.io.File;
 import java.util.List;
 
 import io.reactivex.Scheduler;
@@ -95,21 +96,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
-//                Network.getLocationInfoApi().getLocationInfo(new AdvertisementBoardDetailInfo(30, "http"))
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String s) throws Exception {
-//                        android.util.Log.d("zz", "main + s = " + s);
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        android.util.Log.d("zz", "main + error = " + throwable.toString());
-//                    }
-//                });
+                Network.downloadVideo();  //从网络下载视频到本地
             }
         });
         mUserInfo = (ImageView)findViewById(R.id.user_info);
@@ -162,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS,
                         Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.INTERNET},
+                        Manifest.permission.INTERNET, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS},
                 1);
     }
 
@@ -449,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static final String CHARGECRITERION = "CHARGECRITERION";
     private View mDialogContent;
     private void setDialogAdvertisementBoardDetailInfo() {
-        Network.getAdvertisementBoardDetailInfoApi().getAdvertisementBoardDetailInfo()  //"billBoardInfo", "query"
+        Network.getAdvertisementBoardDetailInfoApi().getAdvertisementBoardDetailInfo("billBoardInfo", "query")  // "billBoardInfo", "query"
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<AdvertisementBoardDetailInfo>() {

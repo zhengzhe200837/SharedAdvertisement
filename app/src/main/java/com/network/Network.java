@@ -5,17 +5,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.network.ExceptionInterceptor.CreateInterceptor;
 import com.network.api.AdvertisementBoardDetailInfoApi;
+import com.network.api.DownloadVideoApi;
 import com.network.api.LocationInfoApi;
 import com.network.api.MyOrderApi;
 import com.network.api.UploadMyOrderInfoApi;
 import com.network.api.UploadMyVideoApi;
+import com.network.mapper.NetworkVideoResponseBodyMapper;
 import com.network.model.UploadMyOrderInfo;
-import com.network.model.VideoUrl;
-
 import java.io.File;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -48,7 +46,7 @@ public class Network {
             GsonBuilder gb = new GsonBuilder();
             Gson gson = gb.setLenient().create();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.109:8080")  // http://192.168.31.233:8080/simpleDemo/serv
+                    .baseUrl("http://192.168.31.233:8080")  // http://192.168.31.233:8080
                     .client(mOkHttpClient)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -81,7 +79,7 @@ public class Network {
 
         if (mUploadMyVideoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.109:8080")
+                    .baseUrl("http://192.168.31.233:8080")  //  http://192.168.31.233:8080  http://192.168.31.109:8080
                     .client(mOkHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
@@ -97,20 +95,6 @@ public class Network {
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(),
                 requestFile);
-//        getUploadMyVideoApi().uploadMyVideo(body)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<UploadMyVideoResult>() {
-//                    @Override
-//                    public void accept(UploadMyVideoResult uploadMyVideoResult) throws Exception {
-//
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//
-//                    }
-//                });
         getUploadMyVideoApi().uploadMyVideo(body)
 //                .retryWhen(new CreateInterceptor.RetryWhen202Happen(3, 2000))  //重试
                 .subscribeOn(Schedulers.io())
@@ -134,7 +118,7 @@ public class Network {
     public static MyOrderApi getMyOrder() {
         if (mMyOrderApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.109:8080")
+                    .baseUrl("http://192.168.31.233:8080")  // http://192.168.31.233:8080   http://192.168.31.109:8080
                     .client(mOkHttpClient)
                     .addConverterFactory(mGsonConverterFactory)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
@@ -161,7 +145,7 @@ public class Network {
         if (mAdvertisementBoardDetailInfoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .client(mOkHttpClient)
-                    .baseUrl("http://192.168.31.109:8080")  //http://192.168.31.109:8080  http://192.168.31.233:8080/simpleDemo/HandleDataBaseServlet
+                    .baseUrl("http://192.168.31.233:8080")  // http://192.168.31.109:8080
                     .addConverterFactory(mGsonConverterFactory)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .build();
@@ -169,4 +153,35 @@ public class Network {
         }
         return mAdvertisementBoardDetailInfoApi;
     }
+
+    private static DownloadVideoApi mDownloadVideoApi;
+    public static void downloadVideo() {
+        GsonBuilder gb = new GsonBuilder();
+        Gson gson = gb.setLenient().create();
+        if (mDownloadVideoApi == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://192.168.31.109:8080")
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(mRxjavaCallAdapterFactory)
+                    .client(mOkHttpClient)
+                    .build();
+            mDownloadVideoApi = retrofit.create(DownloadVideoApi.class);
+        }
+        mDownloadVideoApi.downVideo("http://192.168.31.109:8080/SharedAdvertisement/Video1.mp4")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new NetworkVideoResponseBodyMapper())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        android.util.Log.d("zz", "Network + downloadVideo() + s = " + s);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        android.util.Log.d("zz", "Network + downloadVideo() + error = " + throwable.toString());
+                    }
+                });
+    }
+
 }

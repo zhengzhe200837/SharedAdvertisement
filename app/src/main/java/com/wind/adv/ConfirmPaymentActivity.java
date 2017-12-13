@@ -124,6 +124,7 @@ public class ConfirmPaymentActivity extends Activity {
 
 		mUploadMyOrderInfo = new UploadMyOrderInfo.UploadMyOrderInfoBuilder()
 				.setTableName("orderInfo")
+				.setTodo("insert")
 				.setPlayStartYear(selectYear)
 				.setPlayStartMonth(selectMonth+1)
 				.setPlayStartDate(selectDate)
@@ -258,6 +259,7 @@ public class ConfirmPaymentActivity extends Activity {
 	}
 	private void uploadMyVideo() {
 		if (mUploadVideoPath != null) {
+			android.util.Log.d("zz", "path = " + mUploadVideoPath);
 			Network.uploadVideoFile(this, new File(mUploadVideoPath));
 		}
 	}

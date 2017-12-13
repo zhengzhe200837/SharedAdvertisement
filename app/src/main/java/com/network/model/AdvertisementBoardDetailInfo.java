@@ -19,7 +19,7 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
     private String equipmentName;
     private long openStartTime;
     private long openEndTime;
-    private String phone;
+    private String businessPhone;
     private String tableName;
     private String picture_url;
 
@@ -28,7 +28,7 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
 
     public AdvertisementBoardDetailInfo(long price, String address, long businessId,String equipmentType,
                          String screenType, long screenWidth, long screenHeight, long openStartTime,
-                         long openEndTime, String phone, String equipmentName, String tableName, String picture_url,
+                         long openEndTime, String businessPhone, String equipmentName, String tableName, String picture_url,
                          String equipmentAttribute, String screenAttritute) {
         this.price = price;
         this.address = address;
@@ -39,7 +39,7 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
         this.screenHeight = screenHeight;
         this.openStartTime = openStartTime;
         this.openEndTime = openEndTime;
-        this.phone = phone;
+        this.businessPhone = businessPhone;
         this.equipmentName = equipmentName;
         this.tableName = tableName;
         this.picture_url = picture_url;
@@ -62,7 +62,7 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
         out.writeLong(screenHeight);
         out.writeLong(openStartTime);
         out.writeLong(openEndTime);
-        out.writeString(phone);
+        out.writeString(businessPhone);
         out.writeString(equipmentName);
         out.writeString(picture_url);
         out.writeString(equipmentAttribute);
@@ -88,7 +88,7 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
         screenHeight = in.readLong();
         openStartTime = in.readLong();
         openEndTime = in.readLong();
-        phone = in.readString();
+        businessPhone = in.readString();
         equipmentName = in.readString();
         picture_url = in.readString();
         equipmentAttribute = in.readString();
@@ -110,8 +110,8 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
     public String getEquipmentName() {
         return equipmentName;
     }
-    public String getPhone() {
-        return phone;
+    public String getBusinessPhone() {
+        return businessPhone;
     }
     public void setOpenStartTime(long openStartTime) {
         this.openStartTime = openStartTime;

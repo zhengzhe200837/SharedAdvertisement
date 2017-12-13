@@ -9,7 +9,9 @@ import com.network.ExceptionInterceptor.CreateInterceptor;
 import com.network.api.AdvertisementBoardDetailInfoApi;
 import com.network.api.LocationInfoApi;
 import com.network.api.MyOrderApi;
+import com.network.api.UploadMyOrderInfoApi;
 import com.network.api.UploadMyVideoApi;
+import com.network.model.UploadMyOrderInfo;
 import com.network.model.VideoUrl;
 
 import java.io.File;
@@ -39,8 +41,37 @@ public class Network {
     private static AdvertisementBoardDetailInfoApi mAdvertisementBoardDetailInfoApi;
     private static MyOrderApi mMyOrderApi;
     private static UploadMyVideoApi mUploadMyVideoApi;
+    private static UploadMyOrderInfoApi mUploadMyOrderInfoApi;
 
-    public static UploadMyVideoApi getUploadMyVideoApi() {
+    public static void uploadMyOrderInfo(UploadMyOrderInfo orderInfo) {
+        if (mUploadMyOrderInfoApi == null) {
+            GsonBuilder gb = new GsonBuilder();
+            Gson gson = gb.setLenient().create();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://192.168.31.109:8080")  // http://192.168.31.233:8080/simpleDemo/serv
+                    .client(mOkHttpClient)
+                    .addCallAdapterFactory(mRxjavaCallAdapterFactory)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+            mUploadMyOrderInfoApi = retrofit.create(UploadMyOrderInfoApi.class);
+        }
+        mUploadMyOrderInfoApi.uploadMyOrderInfo(orderInfo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        android.util.Log.d("zz", "Network + uploadMyOrderInfo + s = " + s);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        android.util.Log.d("zz", "Network + uploadMyOrderInfo + error = " + throwable.toString());
+                    }
+                });
+    }
+
+    private static UploadMyVideoApi getUploadMyVideoApi() {
         GsonBuilder gb = new GsonBuilder();
         Gson gson = gb.setLenient().create();  //返回数据不是gson格式的处理方法
 
@@ -126,11 +157,11 @@ public class Network {
         return mLocationInfoApi;
     }
 
-    public static AdvertisementBoardDetailInfoApi getAdvertisementBoardDetailInfoApi(String url) {
+    public static AdvertisementBoardDetailInfoApi getAdvertisementBoardDetailInfoApi() {
         if (mAdvertisementBoardDetailInfoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .client(mOkHttpClient)
-                    .baseUrl(url)
+                    .baseUrl("http://192.168.31.109:8080")  //http://192.168.31.109:8080  http://192.168.31.233:8080/simpleDemo/HandleDataBaseServlet
                     .addConverterFactory(mGsonConverterFactory)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .build();

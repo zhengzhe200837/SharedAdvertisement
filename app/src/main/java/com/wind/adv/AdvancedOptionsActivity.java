@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import sharedadvertisement.wind.com.sharedadvertisement.MainActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
 import utils.CommonUtil;
 import utils.VideoInfo;
@@ -27,7 +28,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,7 +50,8 @@ public class AdvancedOptionsActivity extends Activity {
 	private EditText play_default_time;
 	private EditText play_default_times;
 	private Button mDeleteVideo;
-	private TextView mTotalPrice;
+	private TextView mTotalPriceText;
+	private long mTotalPrice;
 	private TextView mconfirm;
 	private TextView mCancle;
 	private String mHour;
@@ -67,6 +71,8 @@ public class AdvancedOptionsActivity extends Activity {
 	private int mCurrentDate;
 	private int mCurrentHour;
 	private int mCurrentMinute;
+	private TextView mChargeCriterion;
+	private long mPrice;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +84,11 @@ public class AdvancedOptionsActivity extends Activity {
         upload_video = (EditText) findViewById(R.id.upload_video);
         play_default_time = (EditText) findViewById(R.id.play_default_time);
         play_default_times = (EditText) findViewById(R.id.play_default_times);
-        mTotalPrice = (TextView) findViewById(R.id.total_price);
+        mTotalPriceText = (TextView) findViewById(R.id.total_price);
         mDeleteVideo = (Button) findViewById(R.id.delete_video);
+		mChargeCriterion = (TextView)findViewById(R.id.minute_price);
+		mPrice = getIntent().getLongExtra(MainActivity.CHARGECRITERION, 0);
+		mChargeCriterion.setText(String.valueOf(mPrice) + "元/秒");
         
         initUploadVideoListener();
         initEditStartTimeTextListener();
@@ -163,26 +172,40 @@ public class AdvancedOptionsActivity extends Activity {
 	}
 	
 	private void initPlayTimesListener() {
-		play_default_times.setOnFocusChangeListener(new OnFocusChangeListener() {
-			public void onFocusChange(View arg0, boolean hasFocus) {
-				if(!hasFocus){
-					calculateTotalPrice();
-				}
+		play_default_times.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				calculateTotalPrice();
 			}
 		});
 	}
 
 	private void initPlayTimeListener() {
 		play_default_time.setInputType(InputType.TYPE_NULL);
-		play_default_time.setOnFocusChangeListener(new OnFocusChangeListener() {
-			public void onFocusChange(View arg0, boolean hasFocus) {
-				if(!hasFocus){
-					calculateTotalPrice();
-				}else {
-					Intent intent = new Intent();
-					intent.setClass(AdvancedOptionsActivity.this, SelectPlayTimeActivity.class);
-					startActivityForResult(intent, 2);
-				}
+		play_default_time.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				calculateTotalPrice();
 			}
 		});
 		
@@ -209,8 +232,14 @@ public class AdvancedOptionsActivity extends Activity {
 		if(playDefaultTime.equals("")){
 			playTime = 5;
 		}
-		
-		mTotalPrice.setText("总价：" + playTime*playTimes*10 + "元");
+		if (playDefaultTime.contains("分钟")) {
+			playTime = Integer.parseInt(playDefaultTime.substring(0, playDefaultTime.indexOf("分钟"))) * 60;
+		} else if (playDefaultTime.contains("秒")){
+			playTime = Integer.parseInt(playDefaultTime.substring(0, playDefaultTime.indexOf("秒")));
+		}
+
+		mTotalPrice = playTime*playTimes*mPrice;
+		mTotalPriceText.setText("总价：" + mTotalPrice + "元");
 	}
 	
 	private void showDataPickerDialog() {
@@ -262,18 +291,24 @@ public class AdvancedOptionsActivity extends Activity {
 	
 	@Override  
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		boolean isXiaomi = false;
 	    if(requestCode == 1) {
 	    	if(resultCode == RESULT_OK){
-	    		Uri uri = data.getData();
-
+				Uri uri = data.getData();
 				String path = "";
-	    		if(!isXiaomi){
-					Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-	    		    cursor.moveToFirst();
-					path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-				}else {
+
+				final String scheme = uri.getScheme();
+
+				if(scheme == null) {
 					path = uri.getPath();
+				}else if(ContentResolver.SCHEME_FILE.equals(scheme)){
+					path = uri.getPath();
+				}else if(ContentResolver.SCHEME_CONTENT.equals(scheme)){
+					Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+					if(null != cursor){
+						cursor.moveToFirst();
+						path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+						cursor.close();
+					}
 				}
 
 				String[] projection = new String[] {
@@ -312,38 +347,6 @@ public class AdvancedOptionsActivity extends Activity {
 
 				Log.i("minos", " path = " + path);
 	    		upload_video.setText(path);
-	    		
-//	    		final MediaPlayer mediaPlayer = new MediaPlayer();
-//	    		try {
-//	    			if(isXiaomi){
-//						mediaPlayer.setDataSource(path);
-//					}else {
-//						mediaPlayer.setDataSource(this, uri);
-//					}
-//
-//					mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//					mediaPlayer.prepare();
-//				} catch (IllegalStateException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//
-//				mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//					public void onPrepared(MediaPlayer mp) {
-//						 int second = mp.getDuration()/1000;
-//						 Log.i("minos", "mVideoDuration = " + mVideoDuration);
-//						 if(second/60 > 0) {
-//							 play_default_time.setText(second/60+"分" + second%60+"秒");
-//							 playTime = second/60 + 1;
-//						 }else {
-//						 	 playTime = 1;
-//							 play_default_time.setText(second + "秒");
-//						 }
-//					}
-//				});
 
 	    	}
 	    }
@@ -360,13 +363,9 @@ public class AdvancedOptionsActivity extends Activity {
 	    super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	private String mUploadVideoPath;
 	private void setVideoPathAndId(String path, int id, String name, String status){
-//		zhengzhe start
-//		VideoInfo vi = new VideoInfo(path, name, status);
-//		vi.setId(id);
-//		CommonUtil.storeVideoInfo(this, vi);
-		Network.uploadVideoFile(this, new File(path));
-//		zhengzhe end
+		mUploadVideoPath = path;
 	}
 
 	private void showDialog() {
@@ -397,7 +396,6 @@ public class AdvancedOptionsActivity extends Activity {
 		Dialog.setMessage(mShowDialogMessage)
 		      .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
-					calculateTotalPrice();
 					if(date > 0 || (date == 0 && playCountdown >= 5)){
 						Intent intent = new Intent();
 						intent.putExtra("start_time", editStartTimeText.getText().toString());
@@ -408,8 +406,10 @@ public class AdvancedOptionsActivity extends Activity {
 						intent.putExtra("select_year", mSelectYear);
 						intent.putExtra("select_month", mSelectMonth);
 						intent.putExtra("select_date", mSelectDate);
-						intent.putExtra("total_price", mTotalPrice.getText().toString());
-						
+						intent.putExtra("total_price_text", mTotalPriceText.getText().toString());
+						intent.putExtra("total_price", mTotalPrice);
+						intent.putExtra("upload_video_path", mUploadVideoPath);
+
 						if(upload_video.getText().toString().equals("") || upload_video.getText() == null){
 							intent.putExtra("video_is_upload", false);
 						}else {
@@ -422,7 +422,6 @@ public class AdvancedOptionsActivity extends Activity {
 			  })
 			  .setNegativeButton(getString(R.string.cancle), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface arg0, int arg1) {
-					calculateTotalPrice(); 
 				}
 			  })
 			  .show();		

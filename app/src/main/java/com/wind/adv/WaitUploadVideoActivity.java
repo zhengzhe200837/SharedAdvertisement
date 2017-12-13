@@ -84,20 +84,26 @@ public class WaitUploadVideoActivity extends Activity {
     } 
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		boolean isXiaomi = false;
 	    if(requestCode == 1) {
 	    	if(resultCode == RESULT_OK){
-	    		Uri uri = data.getData();
+				Uri uri = data.getData();
 
 				String path = "";
-				if(!isXiaomi){
-					Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-					cursor.moveToFirst();
-					path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-				}else {
-					path = uri.getPath();
-				}
 
+				final String scheme = uri.getScheme();
+
+				if(scheme == null) {
+					path = uri.getPath();
+				}else if(ContentResolver.SCHEME_FILE.equals(scheme)){
+					path = uri.getPath();
+				}else if(ContentResolver.SCHEME_CONTENT.equals(scheme)){
+					Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+					if(null != cursor){
+						cursor.moveToFirst();
+						path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+						cursor.close();
+					}
+				}
 				String[] projection = new String[] {
 						MediaStore.Video.Media.DATA,
 						MediaStore.Video.Media._ID,
@@ -130,12 +136,14 @@ public class WaitUploadVideoActivity extends Activity {
 	}
 
 	private void setVideoPathAndId(String path, int id, String name, String status){
-//		zhengzhe start
-//		VideoInfo vi = new VideoInfo(path, name, status);
-//		vi.setId(id);
-//		CommonUtil.storeVideoInfo(this, vi);
-		Network.uploadVideoFile(this, new File(path));
-//		zhengzhe end
+		mUploadVideoPath = path;
+	}
+
+	private String mUploadVideoPath;
+	private void uploadMyVideo() {
+		if (mUploadVideoPath != null) {
+			Network.uploadVideoFile(this, new File(mUploadVideoPath));
+		}
 	}
 	
 	private void initConfirmAndCancleListener() {
@@ -145,6 +153,7 @@ public class WaitUploadVideoActivity extends Activity {
     		    intent.putExtras(mBundle);
     		    intent.setClass(WaitUploadVideoActivity.this, PlayCountDownActivity.class);
     		    startActivity(intent);
+				uploadMyVideo();
 			}	
 		});
 	}

@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.network.Network;
 import com.network.model.AdvertisementBoardDetailInfo;
 import com.wind.adv.AdvancedOptionsActivity;
@@ -30,25 +32,34 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
     private RecyclerView mRecyclerView;
     private String[] mApparatusDetail;
     private TextView mCancel;
-    private String[] mApparatusDetailValue = new String[] {
-            "固定设备", "餐馆", "LED", "横屏", "1300cm x 750cm"
-    };
-    private String mCurrentUrl;
+    private String[] mApparatusDetailValue = new String[5];
     private AdvertisementBoardDetailInfo mCurrentAdvertisementBoardDetailInfo;
-
+    private TextView mBillBoardName;
+    private TextView mBillBoardPrice;
+    private TextView mBillBoardLocation;
+    private TextView mBillBoardPhone;
+    private ImageView mBillBoardPicture;
+    private RecyclerViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.advertisement_board_detail_info_layout);
-//        network start
-//        mCurrentUrl = getIntent().getStringExtra(MainActivity.CURRENTADVERTISEMENTBOARDDETAILINFOURL);
-//        mCurrentAdvertisementBoardDetailInfo = getIntent().getParcelableExtra(MainActivity.CURRENTADVERTISEMENTBOARDDETAILINFO);
-//        if (mCurrentAdvertisementBoardDetailInfo == null) {
-//            getAdvertisementBoardDetailInfo(mCurrentUrl);
-//        }
-//        network end
-
+        mBillBoardName = (TextView)findViewById(R.id.bill_board_name);
+        mBillBoardPrice = (TextView)findViewById(R.id.bill_board_price);
+        mBillBoardLocation = (TextView)findViewById(R.id.bill_board_location);
+        mBillBoardPhone = (TextView)findViewById(R.id.bill_board_phone);
+        mBillBoardPicture = (ImageView)findViewById(R.id.picture);
+        mCurrentAdvertisementBoardDetailInfo = getIntent().getParcelableExtra(MainActivity.CURRENTADVERTISEMENTBOARDDETAILINFO);
+        if (mCurrentAdvertisementBoardDetailInfo != null) {
+            fillDataToViews(mCurrentAdvertisementBoardDetailInfo);
+            fillDataToRecyclerView(mCurrentAdvertisementBoardDetailInfo);
+        } else {
+            android.util.Log.d("zz", "AdvertisementBoardDetailInfoActivity + mCurrentAdvertisementBoardDetailInfo == null");
+        }
+        if (mCurrentAdvertisementBoardDetailInfo == null) {
+            getAdvertisementBoardDetailInfo();
+        }
         mApparatusDetail = getResources().getStringArray(R.array.abdi_apparatus_detail);
         mCancel = (TextView) findViewById(R.id.adbi_cancel);
         mCancel.setOnClickListener(new View.OnClickListener() {
@@ -61,26 +72,49 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
         mPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startSubActivity(AdvertisementBoardDetailInfoActivity.this, AdvancedOptionsActivity.class);
+                Intent intent = new Intent(AdvertisementBoardDetailInfoActivity.this, AdvancedOptionsActivity.class);
+                if (mCurrentAdvertisementBoardDetailInfo != null) {
+                    intent.putExtra(MainActivity.CHARGECRITERION, mCurrentAdvertisementBoardDetailInfo.getPrice());
+                }
+                startActivity(intent);
             }
         });
         mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerViewAdapter rva = new RecyclerViewAdapter(this);
-        rva.setApparatusDetail(mApparatusDetail);
-        rva.setApparatusDetailValue(mApparatusDetailValue);
-        mRecyclerView.setAdapter(rva);
+        mAdapter = new RecyclerViewAdapter(this);
+        mAdapter.setApparatusDetail(mApparatusDetail);
+        mAdapter.setApparatusDetailValue(mApparatusDetailValue);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
-//    network start
-    private void getAdvertisementBoardDetailInfo(String url) {
-        Network.getAdvertisementBoardDetailInfoApi(url).getAdvertisementBoardDetailInfo()
+    private void fillDataToViews(AdvertisementBoardDetailInfo data) {
+        mBillBoardName.setText(data.getEquipmentName());
+        mBillBoardPrice.setText(String.valueOf(data.getPrice()) + "元/秒");
+        mBillBoardLocation.setText(data.getAddress());
+        mBillBoardPhone.setText(data.getPhone());
+        Glide.with(this).load(data.getPicture_url()).into(mBillBoardPicture);
+    }
+
+    private void fillDataToRecyclerView(AdvertisementBoardDetailInfo data) {
+        mApparatusDetailValue[0] = data.getEquipmentType();
+        mApparatusDetailValue[1] = data.getEquipmentAttribute();
+        mApparatusDetailValue[2] = data.getScreenType();
+        mApparatusDetailValue[3] = data.getScreenAttritute();
+        mApparatusDetailValue[4] = String.valueOf(data.getScreenHeight()) + "cm x " + String.valueOf(data.getScreenWidth()) + "cm";
+    }
+
+    private void getAdvertisementBoardDetailInfo() {
+        Network.getAdvertisementBoardDetailInfoApi().getAdvertisementBoardDetailInfo() //"billBoardInfo", "query"
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<AdvertisementBoardDetailInfo>() {
                     @Override
                     public void accept(AdvertisementBoardDetailInfo advertisementBoardDetailInfo) throws Exception {
                         mCurrentAdvertisementBoardDetailInfo = advertisementBoardDetailInfo;
+                        fillDataToViews(advertisementBoardDetailInfo);
+                        fillDataToRecyclerView(advertisementBoardDetailInfo);
+                        mAdapter.setApparatusDetailValue(mApparatusDetailValue);
+                        mAdapter.notifyDataSetChanged();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -88,12 +122,6 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
 
                     }
                 });
-    }
-//    network end
-
-    private void startSubActivity(Context context, Class<?> clazz) {
-        Intent intent = new Intent(context, clazz);
-        startActivity(intent);
     }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<AdvertisementBoardDetailInfoActivity.RecyclerViewAdapter.ItemViewHolder> {

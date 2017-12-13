@@ -95,20 +95,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Network.getLocationInfoApi().getLocationInfo(new AdvertisementBoardDetailInfo(30, "http"))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        android.util.Log.d("zz", "main + s = " + s);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        android.util.Log.d("zz", "main + error = " + throwable.toString());
-                    }
-                });
+                showDialog();
+//                Network.getLocationInfoApi().getLocationInfo(new AdvertisementBoardDetailInfo(30, "http"))
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String s) throws Exception {
+//                        android.util.Log.d("zz", "main + s = " + s);
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        android.util.Log.d("zz", "main + error = " + throwable.toString());
+//                    }
+//                });
             }
         });
         mUserInfo = (ImageView)findViewById(R.id.user_info);
@@ -397,10 +398,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
         View view = LayoutInflater.from(this).inflate(R.layout.main_dialog_layout, null);
-//        network start
-//        mDialogContent = view;
-//        setDialogAdvertisementBoardDetailInfo(mCurrentUrl);
-//        network end
+        mDialogContent = view;
+        setDialogAdvertisementBoardDetailInfo();
         mMainDialogClose = (ImageView) view.findViewById(R.id.main_dialog_close);
         mMainDialogClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,24 +411,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMainDialogDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                network start
-//                Intent intent = new Intent(MainActivity.this, AdvertisementBoardDetailInfoActivity.class);
-//                if (mCurrentAdvertisementBoardDetailInfo != null) {
-//                    intent.putExtra(CURRENTADVERTISEMENTBOARDDETAILINFO, mCurrentAdvertisementBoardDetailInfo);
-//                }
-//                if (mCurrentUrl != null) {
-//                    intent.putExtra(CURRENTADVERTISEMENTBOARDDETAILINFOURL, mCurrentUrl);
-//                }
-//                startActivity(intent);
-//                network end
-                startSubActivity(MainActivity.this, AdvertisementBoardDetailInfoActivity.class);
+                Intent intent = new Intent(MainActivity.this, AdvertisementBoardDetailInfoActivity.class);
+                if (mCurrentAdvertisementBoardDetailInfo != null) {
+                    intent.putExtra(CURRENTADVERTISEMENTBOARDDETAILINFO, mCurrentAdvertisementBoardDetailInfo);
+                } else {
+                    android.util.Log.d("zz", "MainActivity + mCurrentAdvertisementBoardDetailInfo == null");
+                }
+                startActivity(intent);
             }
         });
         mMainDialogPublish = (TextView) view.findViewById(R.id.main_dialog_publish);
         mMainDialogPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startSubActivity(MainActivity.this, AdvancedOptionsActivity.class);
+                Intent intent = new Intent(MainActivity.this, AdvancedOptionsActivity.class);
+                if(mCurrentAdvertisementBoardDetailInfo != null) {
+                    android.util.Log.d("zz", "MainActivity + mCurrentAdvertisementBoardDetailInfo + price = " + mCurrentAdvertisementBoardDetailInfo.getPrice());
+                    intent.putExtra(CHARGECRITERION, mCurrentAdvertisementBoardDetailInfo.getPrice());
+                } else {
+                    android.util.Log.d("zz", "MainActivity + mCurrentAdvertisementBoardDetailInfo == null");
+                }
+                startActivity(intent);
             }
         });
         mDialog.setContentView(view);
@@ -442,13 +444,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mDialog.show();
     }
 
-//    network start
     private AdvertisementBoardDetailInfo mCurrentAdvertisementBoardDetailInfo;
     public static final String CURRENTADVERTISEMENTBOARDDETAILINFO = "CURRENTADVERTISEMENTBOARDDETAILINFO";
-    public static final String CURRENTADVERTISEMENTBOARDDETAILINFOURL = "CURRENTADVERTISEMENTBOARDDETAILINFOURL";
+    public static final String CHARGECRITERION = "CHARGECRITERION";
     private View mDialogContent;
-    private void setDialogAdvertisementBoardDetailInfo(String url) {
-        Network.getAdvertisementBoardDetailInfoApi(url).getAdvertisementBoardDetailInfo()
+    private void setDialogAdvertisementBoardDetailInfo() {
+        Network.getAdvertisementBoardDetailInfoApi().getAdvertisementBoardDetailInfo()  //"billBoardInfo", "query"
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<AdvertisementBoardDetailInfo>() {
@@ -460,18 +461,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        android.util.Log.d("zz", "MainActivity + error = " + throwable.toString());
                     }
                 });
     }
     private void fillDialogContent() {
         if (mCurrentAdvertisementBoardDetailInfo != null && mDialogContent != null) {
-            ((TextView)mDialogContent.findViewById(R.id.price)).setText(mCurrentAdvertisementBoardDetailInfo.getPrice());
+            ((TextView)mDialogContent.findViewById(R.id.price)).setText(String.valueOf(mCurrentAdvertisementBoardDetailInfo.getPrice()) + "元/秒");
+            ((TextView)mDialogContent.findViewById(R.id.location)).setText(mCurrentAdvertisementBoardDetailInfo.getAddress());
+
             Glide.with(mDialogContent.getContext()).load(mCurrentAdvertisementBoardDetailInfo.getPicture_url())
                     .into((ImageView)mDialogContent.findViewById(R.id.picture));
         }
     }
-//    network end
 
     private void closeDialog() {
         mDialog.dismiss();

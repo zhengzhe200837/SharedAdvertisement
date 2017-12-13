@@ -29,9 +29,9 @@
         >
         <ImageView
             android:id="@+id/picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ad_de_icon"/>
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -51,7 +51,6 @@
                     android:id="@+id/price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/main_dialog_price"
                     android:textColor="#929292"/>
             </LinearLayout>
 
@@ -68,7 +67,6 @@
                     android:id="@+id/location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/main_dialog_location"
                     android:textColor="#929292"/>
             </LinearLayout>
 

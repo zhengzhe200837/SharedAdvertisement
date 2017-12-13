@@ -72,11 +72,13 @@ public class SelectPlayTimeActivity extends Activity{
 
 		mConfirm.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				int editNumber = Integer.parseInt(mCustomEdit.getText().toString());
 				Intent intent = new Intent();
-				intent.putExtra("select_playtime", editNumber);
-				SelectPlayTimeActivity.this.setResult(RESULT_OK, intent);
-				SelectPlayTimeActivity.this.finish();
+				if (!"自定义".equals(mCustomEdit.getText().toString())) {
+					int editNumber = Integer.parseInt(mCustomEdit.getText().toString());
+					intent.putExtra("select_playtime", editNumber);
+					SelectPlayTimeActivity.this.setResult(RESULT_OK, intent);
+				}
+				finish();
 			}
 		});
 	}

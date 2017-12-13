@@ -1,17 +1,14 @@
 package com.wind.adv;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.zip.Inflater;
-
 import sharedadvertisement.wind.com.sharedadvertisement.R;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,7 +19,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.text.AlteredCharSequence;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +29,8 @@ import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.network.Network;
+import com.network.model.UploadMyOrderInfo;
 
 public class ConfirmPaymentActivity extends Activity {
 	private TextView mStartTimeText;
@@ -49,8 +47,8 @@ public class ConfirmPaymentActivity extends Activity {
 	private Timer mTimer;
 	private Bundle mBundle;
 	private boolean isVideoUploaded;
-	private String mTotalPrice;
-	
+	private String mTotalPriceString;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);				
@@ -63,10 +61,12 @@ public class ConfirmPaymentActivity extends Activity {
 		mConfirmPayMent = (Button) findViewById(R.id.confirm_payment_text);
 		
 		Intent intent = getIntent();
+		mUploadVideoPath = intent.getStringExtra("upload_video_path");
 		String startTime = intent.getStringExtra("start_time");
-		int playTime = intent.getIntExtra("play_time", 5);
+		int durationTime = intent.getIntExtra("play_time", 5);
 		int playTimes = intent.getIntExtra("play_times", 1);
-		mTotalPrice = intent.getStringExtra("total_price");
+		mTotalPriceString = intent.getStringExtra("total_price_text");
+		long totalPrice = intent.getLongExtra("total_price", 10);
 		int selectMinute = intent.getIntExtra("select_minute", 0);
 		int selectHour = intent.getIntExtra("select_hour", 0);
 		int selectYear = intent.getIntExtra("select_year", 0);
@@ -104,9 +104,9 @@ public class ConfirmPaymentActivity extends Activity {
 		mBundle.putString("countDownText", mPlayCountdownText.getText().toString());
 				
 		mStartTimeText.setText(getString(R.string.start_time) + ":" + startTime);
-		mPlayTimeText.setText(getString(R.string.playback_length) + ":" + playTime + "   " 
+		mPlayTimeText.setText(getString(R.string.playback_length) + ":" + durationTime + "   "
 		                          + getString(R.string.play_times) + ":"  + playTimes);
-		mTotalPriceText.setText(mTotalPrice);
+		mTotalPriceText.setText(mTotalPriceString);
 		
 		mCancleText.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
@@ -121,13 +121,26 @@ public class ConfirmPaymentActivity extends Activity {
 				onClickConfirmPayment();
 			}
 		});
+
+		mUploadMyOrderInfo = new UploadMyOrderInfo.UploadMyOrderInfoBuilder()
+				.setTableName("orderInfo")
+				.setPlayStartYear(selectYear)
+				.setPlayStartMonth(selectMonth+1)
+				.setPlayStartDate(selectDate)
+				.setPlayStartHour(selectHour)
+				.setPlayStartMinute(selectMinute)
+				.setDurationTime(durationTime)
+				.setPlayTimes(playTimes)
+				.setTotalPrice(totalPrice)
+				.setOrderStatus(0)
+				.build();
 	}
-	
+
 	private void initPopupWindow() {
 		mCotentView = LayoutInflater.from(this).inflate(R.layout.confirm_payment_popup, null, false);
 		mPayMentAtOnce = (Button) mCotentView.findViewById(R.id.payment_at_once);
 		TextView totalPrice = (TextView) mCotentView.findViewById(R.id.total_price);
-		totalPrice.setText(mTotalPrice);
+		totalPrice.setText(mTotalPriceString);
 		mPopupWindow = new PopupWindow(mCotentView, LayoutParams.MATCH_PARENT, 
 				                         LayoutParams.WRAP_CONTENT, true);
 		mPopupWindow.setTouchable(true);
@@ -198,7 +211,10 @@ public class ConfirmPaymentActivity extends Activity {
 	    		    	mDialog.dismiss();
 	    		    }
 	    		    mTimer.cancel();
-	    		    
+
+					uploadMyOrderInfo();
+					uploadMyVideo();
+
 	    		    if(isVideoUploaded){
 	    		    	Intent intent = new Intent();
 		    		    intent.putExtras(mBundle);
@@ -233,5 +249,16 @@ public class ConfirmPaymentActivity extends Activity {
 		};
 		
 		mTimer.schedule(timeTask, 1000, 1000);
+	}
+
+	private UploadMyOrderInfo mUploadMyOrderInfo;
+	private String mUploadVideoPath;
+	private void uploadMyOrderInfo() {
+		Network.uploadMyOrderInfo(mUploadMyOrderInfo);
+	}
+	private void uploadMyVideo() {
+		if (mUploadVideoPath != null) {
+			Network.uploadVideoFile(this, new File(mUploadVideoPath));
+		}
 	}
 }

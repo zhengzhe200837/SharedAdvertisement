@@ -1,13 +1,7 @@
 package com.network.api;
 
-import com.network.model.AdvertisementBoardDetailInfo;
-import com.network.model.UploadMyVideoResult;
-import com.network.model.VideoUrl;
-
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.http.Body;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -19,6 +13,5 @@ import retrofit2.http.Part;
 public interface UploadMyVideoApi {
     @Multipart
     @POST("/SharedAdvertisement/UploadVideoServlet")
-//    Observable<UploadMyVideoResult> uploadMyVideo(@Part MultipartBody.Part videoFile);
     Observable<String> uploadMyVideo(@Part MultipartBody.Part videoFile);
 }

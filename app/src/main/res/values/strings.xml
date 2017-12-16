@@ -67,4 +67,8 @@
     <string name="select_playtime">选择播放时间</string>
     <string name="count_down">播放倒计时</string>
     <string name="upload_video_title">上传片源</string>
+    <!--calendar start-->
+    <string name="ok_text">确定</string>
+    <string name="cancel_text">取消</string>
+    <!--calendar end-->
 </resources>

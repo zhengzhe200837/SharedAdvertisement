@@ -260,7 +260,7 @@ public class ConfirmPaymentActivity extends Activity {
 	private void uploadMyVideo() {
 		if (mUploadVideoPath != null) {
 			android.util.Log.d("zz", "path = " + mUploadVideoPath);
-			Network.uploadVideoFile(this, new File(mUploadVideoPath));
+			Network.uploadVideoFile(this, new File(mUploadVideoPath), null);
 		}
 	}
 }

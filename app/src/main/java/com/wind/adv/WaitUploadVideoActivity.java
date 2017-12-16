@@ -142,7 +142,7 @@ public class WaitUploadVideoActivity extends Activity {
 	private String mUploadVideoPath;
 	private void uploadMyVideo() {
 		if (mUploadVideoPath != null) {
-			Network.uploadVideoFile(this, new File(mUploadVideoPath));
+			Network.uploadVideoFile(this, new File(mUploadVideoPath), null);
 		}
 	}
 	

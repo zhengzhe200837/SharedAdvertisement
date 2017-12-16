@@ -79,7 +79,7 @@ public class Network {
 
         if (mUploadMyVideoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.233:8080")  //  http://192.168.31.233:8080  http://192.168.31.109:8080
+                    .baseUrl("http://192.168.31.109:8080")  //  http://192.168.31.233:8080  http://192.168.31.109:8080
                     .client(mOkHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
@@ -89,11 +89,11 @@ public class Network {
         return mUploadMyVideoApi;
     }
 
-    public static void uploadVideoFile(final Context context, File file) {
+    public static void uploadVideoFile(final Context context, File file, String fileName) {
         Toast.makeText(context, "开始上传", Toast.LENGTH_SHORT).show();
         //MediaType 为全部类型
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/octet-stream"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(),
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName,
                 requestFile);
         getUploadMyVideoApi().uploadMyVideo(body)
 //                .retryWhen(new CreateInterceptor.RetryWhen202Happen(3, 2000))  //重试
@@ -183,5 +183,4 @@ public class Network {
                     }
                 });
     }
-
 }

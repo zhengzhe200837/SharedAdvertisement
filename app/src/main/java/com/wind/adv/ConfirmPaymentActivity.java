@@ -4,11 +4,16 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
+import utils.LogUtil;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,7 +34,10 @@ import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.calendar.utils.DateUtil;
 import com.network.Network;
+import com.network.model.SelectedPlayTimeSegment;
 import com.network.model.UploadMyOrderInfo;
 
 public class ConfirmPaymentActivity extends Activity {
@@ -48,6 +56,7 @@ public class ConfirmPaymentActivity extends Activity {
 	private Bundle mBundle;
 	private boolean isVideoUploaded;
 	private String mTotalPriceString;
+	private String mMySelectPlayStartTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +68,12 @@ public class ConfirmPaymentActivity extends Activity {
 		mCancleText = (TextView) findViewById(R.id.cancle_text);
 		mPlayCountdownText = (TextView) findViewById(R.id.Play_countdown_text);
 		mConfirmPayMent = (Button) findViewById(R.id.confirm_payment_text);
-		
 		Intent intent = getIntent();
+		mMySelectPlayStartTime = intent.getStringExtra("selected_play_start_time");
 		mUploadVideoPath = intent.getStringExtra("upload_video_path");
+		mUploadVideoName = intent.getStringExtra("upload_video_name");
 		String startTime = intent.getStringExtra("start_time");
-		int durationTime = intent.getIntExtra("play_time", 5);
+		long durationTime = intent.getLongExtra("play_time", 0);
 		int playTimes = intent.getIntExtra("play_times", 1);
 		mTotalPriceString = intent.getStringExtra("total_price_text");
 		long totalPrice = intent.getLongExtra("total_price", 10);
@@ -77,9 +87,9 @@ public class ConfirmPaymentActivity extends Activity {
 		Calendar calendar = Calendar.getInstance();
 		int currentMinute = calendar.get(Calendar.MINUTE);
 		int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-		int currentYear = calendar.get(Calendar.YEAR);
-		int currentMonth = calendar.get(Calendar.MONTH);
-		int currentDate = calendar.get(Calendar.DAY_OF_MONTH);
+		int currentYear = DateUtil.getCurrentYear();
+		int currentMonth = DateUtil.getCurrentMonth();
+		int currentDate = DateUtil.getCurrentDay();
 		
 		mBundle = new Bundle();
 		mBundle.putInt("selectMinute", selectMinute);
@@ -90,8 +100,10 @@ public class ConfirmPaymentActivity extends Activity {
 		
 		String s1=selectYear + "-" + selectMonth + "-" + selectDate;
 		String s2=currentYear + "-" + currentMonth + "-" + currentDate;
-		int date = calculatePlayCountDown(s1, s2);	
-
+		android.util.Log.d("playtime", "s1 = " + s1);
+		android.util.Log.d("playtime", "s2 = " + s2);
+		int date = calculatePlayCountDown(s1, s2);
+		android.util.Log.d("playtime", "date = " + date);
 		if(date > 0) {
 			mPlayCountdownText.setText(getString(R.string.Play_countdown) + date
                     + getString(R.string.date));
@@ -103,8 +115,8 @@ public class ConfirmPaymentActivity extends Activity {
 		
 		mBundle.putString("countDownText", mPlayCountdownText.getText().toString());
 				
-		mStartTimeText.setText(getString(R.string.start_time) + ":" + startTime);
-		mPlayTimeText.setText(getString(R.string.playback_length) + ":" + durationTime + "   "
+		mStartTimeText.setText(getString(R.string.start_time_segment) + ":" + startTime);
+		mPlayTimeText.setText(getString(R.string.playback_length) + ":" + durationTime + "s" + "   "
 		                          + getString(R.string.play_times) + ":"  + playTimes);
 		mTotalPriceText.setText(mTotalPriceString);
 		
@@ -125,16 +137,46 @@ public class ConfirmPaymentActivity extends Activity {
 		mUploadMyOrderInfo = new UploadMyOrderInfo.UploadMyOrderInfoBuilder()
 				.setTableName("orderInfo")
 				.setTodo("insert")
-				.setPlayStartYear(selectYear)
-				.setPlayStartMonth(selectMonth+1)
-				.setPlayStartDate(selectDate)
-				.setPlayStartHour(selectHour)
-				.setPlayStartMinute(selectMinute)
-				.setDurationTime(durationTime)
+				.setBillBoardId(getSelectedBillBoardId())
+				.setUserPhone(getUserPhone())
+				.setPlayStartTime(mMySelectPlayStartTime)
+				.setDurationTime((int)durationTime * playTimes)
 				.setPlayTimes(playTimes)
 				.setTotalPrice(totalPrice)
-				.setOrderStatus(0)
+				.setBusinessPhone(getBusinessPhone())
+				.setOrderStatus(2)             // 0审核通过还未播放，1已播放，2未审核，3审核不通过，4审核通过未上传
+				.setMediaName(mUploadVideoName)
 				.build();
+		LogUtil.d("zz + ConfirmPaymentActivity + onCreate() + mUploadMyOrderInfo = " + mUploadMyOrderInfo.toString());
+	}
+
+	/**
+	 * 获取商户电话
+	 */
+	private String getBusinessPhone() {
+		SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
+		String businessPhone = sp.getString("businessPhone", "");
+		return businessPhone;
+	}
+
+	/**
+	 * 获取被选择的广告牌id
+	 * @return
+	 */
+	private String getSelectedBillBoardId() {
+		SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
+		String selectedBillBoardId = sp.getString("selectedBillBoardId", "");
+		return selectedBillBoardId;
+	}
+
+	/**
+	 * 获取用户电话
+	 * @return
+	 */
+	private String getUserPhone() {
+		SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
+		String phone = sp.getString("user_phone", "");
+		return phone;
 	}
 
 	private void initPopupWindow() {
@@ -254,13 +296,13 @@ public class ConfirmPaymentActivity extends Activity {
 
 	private UploadMyOrderInfo mUploadMyOrderInfo;
 	private String mUploadVideoPath;
+	private String mUploadVideoName;
 	private void uploadMyOrderInfo() {
 		Network.uploadMyOrderInfo(mUploadMyOrderInfo);
 	}
 	private void uploadMyVideo() {
 		if (mUploadVideoPath != null) {
-			android.util.Log.d("zz", "path = " + mUploadVideoPath);
-			Network.uploadVideoFile(this, new File(mUploadVideoPath), null);
+			Network.uploadVideoFile(this, new File(mUploadVideoPath), getUserPhone() + "_" + mMySelectPlayStartTime + "_" + mUploadVideoName);
 		}
 	}
 }

@@ -2,18 +2,21 @@ package com.network;
 
 import android.content.Context;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.network.api.AdvertisementBoardDetailInfoApi;
 import com.network.api.DownloadVideoApi;
+import com.network.api.GetSelectedPlayTimeSegmentApi;
 import com.network.api.LocationInfoApi;
 import com.network.api.MyOrderApi;
+import com.network.api.UploadJustSelectedPlayTimeSegmentApi;
 import com.network.api.UploadMyOrderInfoApi;
 import com.network.api.UploadMyVideoApi;
 import com.network.mapper.NetworkVideoResponseBodyMapper;
+import com.network.model.SelectedPlayTimeSegment;
 import com.network.model.UploadMyOrderInfo;
 import java.io.File;
+import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -41,12 +44,16 @@ public class Network {
     private static UploadMyVideoApi mUploadMyVideoApi;
     private static UploadMyOrderInfoApi mUploadMyOrderInfoApi;
 
+    /**
+     * 上传我的订单
+     * @param orderInfo
+     */
     public static void uploadMyOrderInfo(UploadMyOrderInfo orderInfo) {
         if (mUploadMyOrderInfoApi == null) {
             GsonBuilder gb = new GsonBuilder();
             Gson gson = gb.setLenient().create();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.233:8080")  // http://192.168.31.233:8080
+                    .baseUrl("http://192.168.31.109:8080")  // http://192.168.31.233:8080  http://192.168.31.109:8080
                     .client(mOkHttpClient)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -69,6 +76,10 @@ public class Network {
                 });
     }
 
+    /**
+     * 获取上传视频api对象
+     * @return
+     */
     private static UploadMyVideoApi getUploadMyVideoApi() {
         GsonBuilder gb = new GsonBuilder();
         Gson gson = gb.setLenient().create();  //返回数据不是gson格式的处理方法
@@ -89,6 +100,12 @@ public class Network {
         return mUploadMyVideoApi;
     }
 
+    /**
+     * 上传视频文件
+     * @param context
+     * @param file
+     * @param fileName
+     */
     public static void uploadVideoFile(final Context context, File file, String fileName) {
         Toast.makeText(context, "开始上传", Toast.LENGTH_SHORT).show();
         //MediaType 为全部类型
@@ -115,10 +132,14 @@ public class Network {
                 });
     }
 
+    /**
+     * 获取我的订单api对象
+     * @return
+     */
     public static MyOrderApi getMyOrder() {
         if (mMyOrderApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.233:8080")  // http://192.168.31.233:8080   http://192.168.31.109:8080
+                    .baseUrl("http://192.168.31.109:8080")  // http://192.168.31.233:8080   http://192.168.31.109:8080
                     .client(mOkHttpClient)
                     .addConverterFactory(mGsonConverterFactory)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
@@ -128,6 +149,10 @@ public class Network {
         return mMyOrderApi;
     }
 
+    /**
+     * 获取广告牌位置信息api对象
+     * @return
+     */
     public static LocationInfoApi getLocationInfoApi() {
         if (mLocationInfoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -141,11 +166,16 @@ public class Network {
         return mLocationInfoApi;
     }
 
+    /**
+     * 获取广告牌详细信息api对象
+     * @return
+     */
+
     public static AdvertisementBoardDetailInfoApi getAdvertisementBoardDetailInfoApi() {
         if (mAdvertisementBoardDetailInfoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .client(mOkHttpClient)
-                    .baseUrl("http://192.168.31.233:8080")  // http://192.168.31.109:8080
+                    .baseUrl("http://192.168.31.109:8080")  // http://192.168.31.109:8080
                     .addConverterFactory(mGsonConverterFactory)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .build();
@@ -155,6 +185,10 @@ public class Network {
     }
 
     private static DownloadVideoApi mDownloadVideoApi;
+
+    /**
+     * 下载视频并保存到本地
+     */
     public static void downloadVideo() {
         GsonBuilder gb = new GsonBuilder();
         Gson gson = gb.setLenient().create();
@@ -182,5 +216,59 @@ public class Network {
                         android.util.Log.d("zz", "Network + downloadVideo() + error = " + throwable.toString());
                     }
                 });
+    }
+
+    private static GetSelectedPlayTimeSegmentApi mGetSelectedPlayTimeSegmentApi;
+
+    /**
+     * 获取已经被选择的播放时间片段api对象
+     * @return
+     */
+    public static GetSelectedPlayTimeSegmentApi getSelectedPlayTimeSegment() {
+        GsonBuilder gb = new GsonBuilder();
+        Gson gson = gb.setLenient().create();
+        if (mGetSelectedPlayTimeSegmentApi == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://192.168.31.109:8080")
+                    .client(mOkHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(mRxjavaCallAdapterFactory)
+                    .build();
+            mGetSelectedPlayTimeSegmentApi = retrofit.create(GetSelectedPlayTimeSegmentApi.class);
+        }
+        return mGetSelectedPlayTimeSegmentApi;
+    }
+
+    private static UploadJustSelectedPlayTimeSegmentApi mUploadJustSelectedPlayTimeSegmentApi;
+
+    /**
+     * 上传移动端选择的播放时间片段
+     * @param justSelectedPlayTimeSegment
+     */
+    public static void uploadJustSelectedPlayTimeSegment(List<SelectedPlayTimeSegment> justSelectedPlayTimeSegment) {
+        if (mUploadJustSelectedPlayTimeSegmentApi == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://192.168.31.109:8080")
+                    .client(mOkHttpClient)
+                    .addConverterFactory(mGsonConverterFactory)
+                    .addCallAdapterFactory(mRxjavaCallAdapterFactory)
+                    .build();
+            mUploadJustSelectedPlayTimeSegmentApi = retrofit.create(UploadJustSelectedPlayTimeSegmentApi.class);
+        }
+        mUploadJustSelectedPlayTimeSegmentApi.uploadJustSelectedPlayTimeSegment(justSelectedPlayTimeSegment)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        android.util.Log.d("zz", "Network + uploadJustSelectedPlayTimeSegment() + s = " + s);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        android.util.Log.d("zz", "Network + uploadJustSelectedPlayTimeSegment() + error = " + throwable.toString());
+                    }
+                });
+
     }
 }

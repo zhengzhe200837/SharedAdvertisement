@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -21,6 +22,8 @@ import com.wind.adv.AdvancedOptionsActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import utils.LogUtil;
 
 /**
  * Created by zhengzhe on 2017/11/10.
@@ -66,6 +69,7 @@ public class MessageAuthenticationActivity extends Activity {
         mLogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                storeUserPhone();
                 mInputAuthenticationCode.setText(null);
                 startCaptureActivity();
                 mLogInButton.setEnabled(false);
@@ -82,6 +86,13 @@ public class MessageAuthenticationActivity extends Activity {
         });
 
         initReceiverIntent(this);
+    }
+
+    private void storeUserPhone() {
+        LogUtil.d("MessageAuthenticationActivity + storeUserPhone() + phone = " + mPhoneNum.getText().toString());
+        SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit().putString("user_phone", mPhoneNum.getText().toString());
+        editor.commit();
     }
 
     private boolean isMobileNO(String mobiles) {

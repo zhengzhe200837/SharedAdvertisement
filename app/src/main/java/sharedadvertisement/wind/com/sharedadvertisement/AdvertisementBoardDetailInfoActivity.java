@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.network.Network;
 import com.network.model.AdvertisementBoardDetailInfo;
+import com.network.model.PostModelOfGetBillBoardDetailInfo;
 import com.wind.adv.AdvancedOptionsActivity;
 
 import org.w3c.dom.Text;
@@ -40,6 +41,7 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
     private TextView mBillBoardPhone;
     private ImageView mBillBoardPicture;
     private RecyclerViewAdapter mAdapter;
+    private String mSelectedBillBoardId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
         mBillBoardLocation = (TextView)findViewById(R.id.bill_board_location);
         mBillBoardPhone = (TextView)findViewById(R.id.bill_board_phone);
         mBillBoardPicture = (ImageView)findViewById(R.id.picture);
+        mSelectedBillBoardId = getIntent().getStringExtra(MainActivity.SELECTEDBILLBOARDID);
         mCurrentAdvertisementBoardDetailInfo = getIntent().getParcelableExtra(MainActivity.CURRENTADVERTISEMENTBOARDDETAILINFO);
         if (mCurrentAdvertisementBoardDetailInfo != null) {
             fillDataToViews(mCurrentAdvertisementBoardDetailInfo);
@@ -88,7 +91,6 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
     }
 
     private void fillDataToViews(AdvertisementBoardDetailInfo data) {
-        mBillBoardName.setText(data.getEquipmentName());
         mBillBoardPrice.setText(String.valueOf(data.getPrice()) + "元/秒");
         mBillBoardLocation.setText(data.getAddress());
         mBillBoardPhone.setText(data.getBusinessPhone());
@@ -104,7 +106,8 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
     }
 
     private void getAdvertisementBoardDetailInfo() {
-        Network.getAdvertisementBoardDetailInfoApi().getAdvertisementBoardDetailInfo("billBoardInfo", "query") //"orderInfo", "query"
+        PostModelOfGetBillBoardDetailInfo body = new PostModelOfGetBillBoardDetailInfo(mSelectedBillBoardId);
+        Network.getAdvertisementBoardDetailInfoApi().getAdvertisementBoardDetailInfo(body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<AdvertisementBoardDetailInfo>() {

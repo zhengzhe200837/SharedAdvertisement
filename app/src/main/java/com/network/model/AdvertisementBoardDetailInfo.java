@@ -8,42 +8,43 @@ import android.os.Parcelable;
  */
 
 public class AdvertisementBoardDetailInfo implements Parcelable{
-    private long billboardId;
+    private String billboardId;
     private long price;
     private String address;
-    private long businessId;
     private String equipmentType;
     private String screenType;
     private long screenWidth;
     private long screenHeight;
-    private String equipmentName;
-    private long openStartTime;
-    private long openEndTime;
-    private String businessPhone;
-    private String tableName;
-    private String picture_url;
 
+    private String startDate;  //开始年月日
+    private String endDate;    //结束年月日
+    private String startTime;  //每天开始的时分秒
+    private String endTime;    //每天结束的时分秒
+
+    private String businessPhone;
+    private String pictureUrl;
     private String equipmentAttribute;
     private String screenAttritute;
 
-    public AdvertisementBoardDetailInfo(long price, String address, long businessId,String equipmentType,
-                         String screenType, long screenWidth, long screenHeight, long openStartTime,
-                         long openEndTime, String businessPhone, String equipmentName, String tableName, String picture_url,
-                         String equipmentAttribute, String screenAttritute) {
+    public AdvertisementBoardDetailInfo(String billboardId, long price, String address, String equipmentType,
+                                        String screenType, long screenWidth, long screenHeight, String businessPhone,
+                                        String startDate, String endDate, String startTime, String endTime,
+                                        String pictureUrl, String equipmentAttribute, String screenAttritute) {
+        this.billboardId = billboardId;
         this.price = price;
         this.address = address;
-        this.businessId = businessId;
         this.equipmentType = equipmentType;
         this.screenType = screenType;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.openStartTime = openStartTime;
-        this.openEndTime = openEndTime;
         this.businessPhone = businessPhone;
-        this.equipmentName = equipmentName;
-        this.tableName = tableName;
-        this.picture_url = picture_url;
 
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+
+        this.pictureUrl = pictureUrl;
         this.equipmentAttribute = equipmentAttribute;
         this.screenAttritute = screenAttritute;
     }
@@ -54,17 +55,15 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
     }
     @Override
     public void writeToParcel(Parcel out, int flags) {
+        out.writeString(billboardId);
         out.writeLong(price);
         out.writeString(address);
         out.writeString(equipmentType);
         out.writeString(screenType);
         out.writeLong(screenWidth);
         out.writeLong(screenHeight);
-        out.writeLong(openStartTime);
-        out.writeLong(openEndTime);
         out.writeString(businessPhone);
-        out.writeString(equipmentName);
-        out.writeString(picture_url);
+        out.writeString(pictureUrl);
         out.writeString(equipmentAttribute);
         out.writeString(screenAttritute);
     }
@@ -80,17 +79,15 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
                 }
             };
     private AdvertisementBoardDetailInfo(Parcel in) {
+        billboardId = in.readString();
         price = in.readLong();
         address = in.readString();
         equipmentType = in.readString();
         screenType = in.readString();
         screenWidth = in.readLong();
         screenHeight = in.readLong();
-        openStartTime = in.readLong();
-        openEndTime = in.readLong();
         businessPhone = in.readString();
-        equipmentName = in.readString();
-        picture_url = in.readString();
+        pictureUrl = in.readString();
         equipmentAttribute = in.readString();
         screenAttritute = in.readString();
     }
@@ -102,40 +99,19 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
         return screenAttritute;
     }
     public void setPicture_url(String picture_url) {
-        this.picture_url = picture_url;
+        this.pictureUrl = picture_url;
     }
     public String getPicture_url() {
-        return picture_url;
-    }
-    public String getEquipmentName() {
-        return equipmentName;
+        return pictureUrl;
     }
     public String getBusinessPhone() {
         return businessPhone;
     }
-    public void setOpenStartTime(long openStartTime) {
-        this.openStartTime = openStartTime;
-    }
-    public long getOpenStartTime() {
-        return openStartTime;
-    }
-    public void setOpenEndTime(long openEndTime) {
-        this.openEndTime = openEndTime;
-    }
-    public long getOpenEndTime() {
-        return openEndTime;
-    }
-    public long getBillboardId() {
+    public String getBillboardId() {
         return this.billboardId;
     }
-    public void setBillboardId(long id) {
+    public void setBillboardId(String id) {
         this.billboardId = id;
-    }
-    public long getBusinessId() {
-        return this.businessId;
-    }
-    public void setbusinessId(long id) {
-        this.businessId = id;
     }
     public long getPrice() {
         return this.price;
@@ -172,5 +148,27 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
     }
     public void setScreenHeight(long height) {
         this.screenHeight = height;
+    }
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+    public String toString() {
+        return "billboardId = " + billboardId + " price = " + price + " address = " + address + " equipmentType = " + equipmentType
+                + " screenType = " + screenType + " screenWidth = " + screenWidth + " screenHeight = " + screenHeight
+                + " startDate = " + startDate + " endDate = " + endDate + " startTime = " + startTime + " endTime = " + endTime
+                + " businessPhone = " + businessPhone + " pictureUrl = " + pictureUrl + " equipmentAttribute = " + equipmentAttribute
+                + " screenAttritute = " + screenAttritute;
     }
 }

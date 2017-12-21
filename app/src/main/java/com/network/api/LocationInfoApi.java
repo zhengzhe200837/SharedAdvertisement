@@ -2,6 +2,8 @@ package com.network.api;
 
 import com.network.model.AdvertisementBoardDetailInfo;
 import com.network.model.LocationPoint;
+import com.network.model.PostModelOfGetLocationInfo;
+
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -17,6 +19,6 @@ import retrofit2.http.Query;
 public interface LocationInfoApi {
 //    @GET("")   //信息接口
 //    Observable<List<LocationPoint>> getLocationInfo(@Query("latitude") double latitude, @Query("longitude") double longitude);  //查询参数、路径  上传我的定位信息
-    @POST("/SharedAdvertisement/SharedAdvertisement")
-    Observable<String> getLocationInfo(@Body AdvertisementBoardDetailInfo ad);
+    @POST("/SharedAdvertisement/GetBillBoardLocationInfoServlet")
+    Observable<List<LocationPoint>> getLocationInfo(@Body PostModelOfGetLocationInfo body);
 }

@@ -7,7 +7,18 @@ package com.network.model;
 public class LocationPoint {
     private double latitude;
     private double longitude;
-    private String detail_url;
+    private String billboardId;
+    public LocationPoint(double latitude, double longitude, String billboardId) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.billboardId = billboardId;
+    }
+    public String toString() {
+        return "latitude = " + latitude + " longitude = " + longitude + " billboardId = " + billboardId;
+    }
+    public String getBillboardId() {
+        return billboardId;
+    }
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
@@ -20,11 +31,5 @@ public class LocationPoint {
     }
     public double getLongitude() {
         return longitude;
-    }
-    public void setDetail_url(String detail_url) {
-        this.detail_url = detail_url;
-    }
-    public String getDetail_url() {
-        return detail_url;
     }
 }

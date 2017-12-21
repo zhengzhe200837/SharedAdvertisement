@@ -10,6 +10,7 @@ import java.util.Date;
 
 import sharedadvertisement.wind.com.sharedadvertisement.MainActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
+import sharedadvertisement.wind.com.sharedadvertisement.SelectAvailablePlayOutsetTimeActivity;
 import utils.CommonUtil;
 import utils.VideoInfo;
 
@@ -58,8 +59,9 @@ public class AdvancedOptionsActivity extends Activity {
 	private String mMinute;
 	private String mDate;
 	private String mShowDialogMessage;
-	private long playTime = 5;
+	private long playTime = 0;
 	private int playTimes = 1;
+	private int mSelectSecond;
 	private int mSelectMinute;
 	private int mSelectHour;
 	private int mSelectYear;
@@ -156,17 +158,20 @@ public class AdvancedOptionsActivity extends Activity {
 		editStartTimeText.setHint(mCurrentYear + "-" + (mCurrentMonth+1) + "-" + mCurrentDate + " "
 				                    + sCurrentHour + ":" + sCurrentMinute); 
 		editStartTimeText.setInputType(InputType.TYPE_NULL);
-		editStartTimeText.setOnFocusChangeListener(new OnFocusChangeListener() {
-			public void onFocusChange(View arg0, boolean hasFocus) {
-				if(hasFocus){
-					showDataPickerDialog();
-				}		
-			}		
-		});
+
+//		editStartTimeText.setOnFocusChangeListener(new OnFocusChangeListener() {
+//			public void onFocusChange(View arg0, boolean hasFocus) {
+//				if(hasFocus){
+//					showDataPickerDialog(); //使用系统选择时间方法
+//				}
+//			}
+//		});
 		
 		editStartTimeText.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
-				showDataPickerDialog();
+//				showDataPickerDialog();  //使用系统选择时间方法
+				Intent intent = new Intent(AdvancedOptionsActivity.this, SelectAvailablePlayOutsetTimeActivity.class);
+				startActivityForResult(intent, 3);
 			}
 		});
 	}
@@ -191,6 +196,7 @@ public class AdvancedOptionsActivity extends Activity {
 	}
 
 	private void initPlayTimeListener() {
+		play_default_time.setEnabled(false);
 		play_default_time.setInputType(InputType.TYPE_NULL);
 		play_default_time.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -211,9 +217,11 @@ public class AdvancedOptionsActivity extends Activity {
 		
 		play_default_time.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
-				Intent intent = new Intent();
-				intent.setClass(AdvancedOptionsActivity.this, SelectPlayTimeActivity.class);
-				startActivityForResult(intent, 2);
+				//进入选择播放时长activity  start
+//				Intent intent = new Intent();
+//				intent.setClass(AdvancedOptionsActivity.this, SelectPlayTimeActivity.class);
+//				startActivityForResult(intent, 2);
+				//进入选择播放时长activity   end
 			}
 		});
 		
@@ -230,7 +238,7 @@ public class AdvancedOptionsActivity extends Activity {
 		}
 		
 		if(playDefaultTime.equals("")){
-			playTime = 5;
+			playTime = 0;
 		}
 		if (playDefaultTime.contains("分钟")) {
 			playTime = Integer.parseInt(playDefaultTime.substring(0, playDefaultTime.indexOf("分钟"))) * 60;
@@ -291,7 +299,7 @@ public class AdvancedOptionsActivity extends Activity {
 	
 	@Override  
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if(requestCode == 1) {
+	    if(requestCode == 1) {    //获取视频路径
 	    	if(resultCode == RESULT_OK){
 				Uri uri = data.getData();
 				String path = "";
@@ -351,7 +359,7 @@ public class AdvancedOptionsActivity extends Activity {
 	    	}
 	    }
 	    
-	    if(requestCode == 2){
+	    if(requestCode == 2){   //选择播放时长activity SelectPlayTimeActivity
 	    	if(resultCode == RESULT_OK){
 	    		playTime = data.getExtras().getInt("select_playtime");
 	    		Log.i("minos", " playTime = " + playTime);
@@ -359,12 +367,35 @@ public class AdvancedOptionsActivity extends Activity {
 				play_default_time.setText(playTime + "分钟");
 	    	}
 	    }
+
+	    if (requestCode == 3) {    // SelectAvailablePlayOutsetTimeActivity
+			if (resultCode == RESULT_OK) {
+				mMySelectPlayStartTime = data.getStringExtra("selected_play_start_time");
+				mSelectYear = Integer.parseInt(mMySelectPlayStartTime.substring(0, 4));
+				mSelectMonth = Integer.parseInt(mMySelectPlayStartTime.substring(4, 6));
+				mSelectDate = Integer.parseInt(mMySelectPlayStartTime.substring(6, 8));
+				mSelectHour = Integer.parseInt(mMySelectPlayStartTime.substring(8, 10));
+				mSelectMinute = Integer.parseInt(mMySelectPlayStartTime.substring(10, 12));
+				mSelectSecond = Integer.parseInt(mMySelectPlayStartTime.substring(12));
+
+				editStartTimeText.setText(mMySelectPlayStartTime.substring(0, 4) + "-"
+						+ mMySelectPlayStartTime.substring(4, 6) + "-"
+						+ mMySelectPlayStartTime.substring(6, 8) + " "
+						+ mMySelectPlayStartTime.substring(8, 10) + ":"
+						+  mMySelectPlayStartTime.substring(10, 12) + ":"
+						+ mMySelectPlayStartTime.substring(12));
+			}
+		}
 	    
 	    super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	private String mMySelectPlayStartTime;
 	private String mUploadVideoPath;
+	private String mUploadVideoName;
+
 	private void setVideoPathAndId(String path, int id, String name, String status){
+		mUploadVideoName = name;
 		mUploadVideoPath = path;
 	}
 
@@ -381,6 +412,8 @@ public class AdvancedOptionsActivity extends Activity {
 		calculateCurrentTime();
 		
 		String s1=mSelectYear + "-" + mSelectMonth + "-" + mSelectDate;
+		android.util.Log.d("zz", "data1 = " + s1);
+		android.util.Log.d("zz", "data2 = " + mSelectHour + " " + mSelectMinute);
 		String s2=mCurrentYear + "-" + mCurrentMonth + "-" + mCurrentDate;
 		final int date = calculatePlayCountDownD(s1, s2);
 		final int playCountdown = mSelectHour*60 + mSelectMinute -(mCurrentHour*60 + mCurrentMinute);
@@ -398,6 +431,7 @@ public class AdvancedOptionsActivity extends Activity {
 				public void onClick(DialogInterface arg0, int arg1) {
 					if(date > 0 || (date == 0 && playCountdown >= 5)){
 						Intent intent = new Intent();
+						intent.putExtra("selected_play_start_time", mMySelectPlayStartTime);
 						intent.putExtra("start_time", editStartTimeText.getText().toString());
 						intent.putExtra("play_time", playTime);
 						intent.putExtra("play_times", playTimes);
@@ -409,6 +443,7 @@ public class AdvancedOptionsActivity extends Activity {
 						intent.putExtra("total_price_text", mTotalPriceText.getText().toString());
 						intent.putExtra("total_price", mTotalPrice);
 						intent.putExtra("upload_video_path", mUploadVideoPath);
+						intent.putExtra("upload_video_name", mUploadVideoName);
 
 						if(upload_video.getText().toString().equals("") || upload_video.getText() == null){
 							intent.putExtra("video_is_upload", false);

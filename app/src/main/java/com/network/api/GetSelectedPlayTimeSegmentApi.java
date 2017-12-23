@@ -18,6 +18,7 @@ import retrofit2.http.Query;
 public interface GetSelectedPlayTimeSegmentApi {
 //    @GET("/SharedAdvertisement/GetSelectedPlayTimeSegmentServlet")
 //    Observable<List<SelectedPlayTimeSegment>> getSelectedPlayTimeSegment(@Query("year") String year, @Query("month") String month, @Query("day") String day);
-    @POST("/SharedAdvertisement/GetSelectedPlayTimeSegmentServlet")
+//    @POST("/SharedAdvertisement/GetSelectedPlayTimeSegmentServlet")
+    @POST("/simpleDemo/HandleDataBaseServlet")
     Observable<List<SelectedPlayTimeSegment>> getSelectedPlayTimeSegment(@Body PostModelOfGetSelectedPlayTimeSegment body);
 }

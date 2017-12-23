@@ -14,7 +14,8 @@ import retrofit2.http.Part;
 
 public interface UploadMyVideoApi {
     @Multipart
-    @POST("/SharedAdvertisement/UploadVideoServlet")
+//    @POST("/SharedAdvertisement/UploadVideoServlet")
+    @POST("/simpleDemo/UploadMediaSourceServlet")
     Observable<String> uploadMyVideo(@Part MultipartBody.Part videoFile);
 //    @Multipart
 //    @POST("simpleDemo/UploadMediaSourceServlet")

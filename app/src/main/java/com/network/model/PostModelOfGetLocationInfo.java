@@ -7,7 +7,7 @@ package com.network.model;
 public class PostModelOfGetLocationInfo {
     private String todo = "query";
     private String tableName = "billBoardInfo";
-    private String methhod = "getBillboardPositon";
+    private String method = "getBillboardPosition";
     public PostModelOfGetLocationInfo() {
 
     }

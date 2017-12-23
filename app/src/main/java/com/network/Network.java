@@ -29,6 +29,7 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import utils.Constants;
 
 /**
  * Created by zhengzhe on 2017/11/30.
@@ -53,7 +54,7 @@ public class Network {
             GsonBuilder gb = new GsonBuilder();
             Gson gson = gb.setLenient().create();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.109:8080")  // http://192.168.31.233:8080  http://192.168.31.109:8080
+                    .baseUrl(Constants.BASE_URL)
                     .client(mOkHttpClient)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -90,7 +91,7 @@ public class Network {
 
         if (mUploadMyVideoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.109:8080")  //  http://192.168.31.233:8080  http://192.168.31.109:8080
+                    .baseUrl(Constants.BASE_URL)
                     .client(mOkHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
@@ -139,7 +140,7 @@ public class Network {
     public static MyOrderApi getMyOrder() {
         if (mMyOrderApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.109:8080")  // http://192.168.31.233:8080   http://192.168.31.109:8080
+                    .baseUrl(Constants.BASE_URL)  // http://192.168.31.233:8080   http://192.168.31.109:8080
                     .client(mOkHttpClient)
                     .addConverterFactory(mGsonConverterFactory)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
@@ -157,7 +158,7 @@ public class Network {
         if (mLocationInfoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .client(mOkHttpClient)
-                    .baseUrl("http://192.168.31.109:8080")  //服务器地址
+                    .baseUrl(Constants.BASE_URL)  //服务器地址
                     .addConverterFactory(mGsonConverterFactory)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .build();
@@ -175,7 +176,7 @@ public class Network {
         if (mAdvertisementBoardDetailInfoApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .client(mOkHttpClient)
-                    .baseUrl("http://192.168.31.109:8080")  // http://192.168.31.109:8080
+                    .baseUrl(Constants.BASE_URL)  // http://192.168.31.109:8080
                     .addConverterFactory(mGsonConverterFactory)
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)
                     .build();
@@ -229,7 +230,7 @@ public class Network {
         Gson gson = gb.setLenient().create();
         if (mGetSelectedPlayTimeSegmentApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.31.109:8080")
+                    .baseUrl(Constants.BASE_URL)
                     .client(mOkHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(mRxjavaCallAdapterFactory)

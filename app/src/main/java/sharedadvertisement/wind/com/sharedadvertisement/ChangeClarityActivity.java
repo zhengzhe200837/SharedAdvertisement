@@ -5,12 +5,15 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.xiao.nicevideoplayer.Clarity;
 import com.xiao.nicevideoplayer.NiceVideoPlayer;
 import com.xiao.nicevideoplayer.NiceVideoPlayerManager;
 import com.xiao.nicevideoplayer.TxVideoPlayerController;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
+import utils.LogUtil;
+
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -30,8 +33,6 @@ public class ChangeClarityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_change_clarity);
         mPath = getIntent().getStringExtra(VIDEOPATH);
         init();
-        android.util.Log.d("zz", "--zz + screenwidth = " + getWindowManager().getDefaultDisplay().getWidth());
-        android.util.Log.d("zz", "--zz + screenheight = " + getWindowManager().getDefaultDisplay().getHeight());
     }
 
     private void init() {
@@ -56,9 +57,19 @@ public class ChangeClarityActivity extends AppCompatActivity {
     private Bitmap getVideoFirstFrame(String path) {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         if (path.startsWith("http")) {
-            mmr.setDataSource(path, new HashMap<String, String>());  //获取网络视频
+            try {
+                mmr.setDataSource(path, new HashMap<String, String>());  //获取网络视频
+            } catch (Exception e) {
+                LogUtil.d("ChangeClarityActivity + getVideoFirstFrame() + network + error = " + e.toString());
+                Toast.makeText(this, "请查看服务器本地是否可以通过浏览器正常播放该URL视频", Toast.LENGTH_SHORT);
+            }
         } else {
-            mmr.setDataSource(path);  //播放本地视频
+            try {
+                mmr.setDataSource(path);  //播放本地视频
+            } catch (Exception e) {
+                LogUtil.d("ChangeClarityActivity + getVideoFirstFrame() + local + error = " + e.toString());
+                Toast.makeText(this, "请查看本地是否存在该视频", Toast.LENGTH_SHORT);
+            }
         }
         String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         mVideoLength = Long.valueOf(time);

@@ -123,7 +123,7 @@ public class MyOrderActivity extends Activity {
 				status = mVideoList.get(position).getStatus();
 			}
 
-			holder.mVideoImage.setImageBitmap(getVideoFirstFrame(videoPath));
+			holder.mVideoImage.setImageBitmap(getVideoFirstFrame(mContext, videoPath));
 			holder.mVideoTitle.setText(title);
 
 			String statusS;
@@ -144,12 +144,22 @@ public class MyOrderActivity extends Activity {
 			holder.mVideoStatus.setText(statusS);
 		}
 
-		private Bitmap getVideoFirstFrame(String path) {
+		private Bitmap getVideoFirstFrame(Context context, String path) {
 			MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 			if (path.startsWith("http")) {
-				mmr.setDataSource(path, new HashMap<String, String>());  //获取网络视频
+				try {
+					mmr.setDataSource(path, new HashMap<String, String>());  //获取网络视频
+				} catch (Exception e) {
+					LogUtil.d("MyOrderActivity + getVideoFirstFrame() + network + error = " + e.toString());
+					Toast.makeText(context, "请查看服务器本地是否可以通过浏览器正常播放该URL视频", Toast.LENGTH_SHORT);
+				}
 			} else {
-				mmr.setDataSource(path);  //播放本地视频
+				try {
+					mmr.setDataSource(path);  //播放本地视频
+				} catch (Exception e) {
+					LogUtil.d("MyOrderActivity + getVideoFirstFrame() + local + error = " + e.toString());
+					Toast.makeText(context, "请查看本地是否存在该视频", Toast.LENGTH_SHORT);
+				}
 			}
 			String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 			Bitmap bitmap = mmr.getFrameAtTime(1,MediaMetadataRetriever.OPTION_CLOSEST_SYNC); // 获取指定时间点的帧图片  单位是微秒

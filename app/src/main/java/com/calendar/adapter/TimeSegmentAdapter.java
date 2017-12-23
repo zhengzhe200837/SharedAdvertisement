@@ -18,6 +18,7 @@ import java.util.List;
 
 import sharedadvertisement.wind.com.sharedadvertisement.R;
 import sharedadvertisement.wind.com.sharedadvertisement.SelectAvailablePlayOutsetTimeActivity;
+import utils.LogUtil;
 
 /**
  * Created by zhengzhe on 2017/12/16.
@@ -212,6 +213,8 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
         int segmentSeconds = 5*60;
         String segmentText = null;
         int startHour = mStartHour;
+        LogUtil.d("TimeSegmentAdapter + getSegmentText() + mStartHour = " + mStartHour);
+//        int startHour = 18;
         int startMinute = 0;
         int startSecond = 0;
         long elapseSeconds = segment * segmentSeconds;

@@ -312,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        LogUtil.d("MainActivity + getMyLocationNearbyAdvertisementBoardLocation() + error = " + throwable.toString());
                         Toast.makeText(MainActivity.this, "数据加载失败", Toast.LENGTH_SHORT).show();
                     }
                 });

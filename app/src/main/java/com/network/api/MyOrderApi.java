@@ -19,6 +19,7 @@ import retrofit2.http.Query;
 public interface MyOrderApi {
 //    @GET("/SharedAdvertisement/MyOrderServlet")
 //    Observable<List<MyOrderItemInfo>> getMyOrder();
-    @POST("/SharedAdvertisement/MyOrderServlet")
+//    @POST("/SharedAdvertisement/MyOrderServlet")
+    @POST("/simpleDemo/HandleDataBaseServlet")
     Observable<List<MyOrderItemInfo>> getMyOrder(@Body PostModelOfGetMyOrder body);
 }

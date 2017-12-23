@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
 //                Network.downloadVideo();  //从网络下载视频到本地
-                showDialog();
+//                showDialog();
             }
         });
         mUserInfo = (ImageView)findViewById(R.id.user_info);

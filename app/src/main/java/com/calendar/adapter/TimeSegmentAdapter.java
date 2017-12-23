@@ -214,7 +214,7 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
         String segmentText = null;
         int startHour = mStartHour;
         LogUtil.d("TimeSegmentAdapter + getSegmentText() + mStartHour = " + mStartHour);
-//        int startHour = 18;
+//        int startHour = 17;
         int startMinute = 0;
         int startSecond = 0;
         long elapseSeconds = segment * segmentSeconds;

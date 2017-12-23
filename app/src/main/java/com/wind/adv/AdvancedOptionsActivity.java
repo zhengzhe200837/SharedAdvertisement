@@ -86,6 +86,7 @@ public class AdvancedOptionsActivity extends Activity {
         upload_video = (EditText) findViewById(R.id.upload_video);
         play_default_time = (EditText) findViewById(R.id.play_default_time);
         play_default_times = (EditText) findViewById(R.id.play_default_times);
+		play_default_times.setInputType(InputType.TYPE_CLASS_NUMBER);  //调用数字键盘，保证edittext只能输入数字
         mTotalPriceText = (TextView) findViewById(R.id.total_price);
         mDeleteVideo = (Button) findViewById(R.id.delete_video);
 		mChargeCriterion = (TextView)findViewById(R.id.minute_price);

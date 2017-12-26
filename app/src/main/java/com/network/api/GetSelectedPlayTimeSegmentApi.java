@@ -10,15 +10,15 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import utils.Constants;
 
 /**
  * Created by zhengzhe on 2017/12/19.
  */
 
 public interface GetSelectedPlayTimeSegmentApi {
-//    @GET("/SharedAdvertisement/GetSelectedPlayTimeSegmentServlet")
+//    @GET(Constants.GET_SELECTED_PLAY_TIME_SEGMENT_NETWORK_INTERFACE)
 //    Observable<List<SelectedPlayTimeSegment>> getSelectedPlayTimeSegment(@Query("year") String year, @Query("month") String month, @Query("day") String day);
-//    @POST("/SharedAdvertisement/GetSelectedPlayTimeSegmentServlet")
-    @POST("/simpleDemo/HandleDataBaseServlet")
+    @POST(Constants.GET_SELECTED_PLAY_TIME_SEGMENT_NETWORK_INTERFACE)
     Observable<List<SelectedPlayTimeSegment>> getSelectedPlayTimeSegment(@Body PostModelOfGetSelectedPlayTimeSegment body);
 }

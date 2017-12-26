@@ -140,11 +140,11 @@ public class Network {
      * @return
      */
     public static MyOrderApi getMyOrder() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(5, TimeUnit.MINUTES)
-                .writeTimeout(5, TimeUnit.MINUTES)
-                .readTimeout(5, TimeUnit.MINUTES);
-        mOkHttpClient = builder.build();
+//        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//        builder.connectTimeout(5, TimeUnit.MINUTES)
+//                .writeTimeout(5, TimeUnit.MINUTES)
+//                .readTimeout(5, TimeUnit.MINUTES);
+//        mOkHttpClient = builder.build();    //设置超时策略
         if (mMyOrderApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)  // http://192.168.31.233:8080   http://192.168.31.109:8080

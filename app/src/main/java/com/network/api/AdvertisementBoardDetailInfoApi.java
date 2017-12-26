@@ -8,17 +8,15 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import utils.Constants;
 
 /**
  * Created by zhengzhe on 2017/11/30.
  */
 
 public interface AdvertisementBoardDetailInfoApi {
-//    @POST("/SharedAdvertisement/GetBillBoardDetailInfoServlet")
-    @POST("/simpleDemo/HandleDataBaseServlet")
+    @POST(Constants.GET_ADVERTISEMENT_BOARD_DETAIL_INFO_NETWORK_INTERFACE)
     Observable<AdvertisementBoardDetailInfo> getAdvertisementBoardDetailInfo(@Body PostModelOfGetBillBoardDetailInfo body);
-//    @GET("/simpleDemo/HandleDataBaseServlet")
+//    @GET(Constants.GET_ADVERTISEMENT_BOARD_DETAIL_INFO_NETWORK_INTERFACE)
 //    Observable<AdvertisementBoardDetailInfo> getAdvertisementBoardDetailInfo(@Query("tableName") String tableName, @Query("todo") String todo);
-//    @GET("/SharedAdvertisement/SharedAdvertisement")
-//    Observable<AdvertisementBoardDetailInfo> getAdvertisementBoardDetailInfo();
 }

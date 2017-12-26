@@ -52,8 +52,7 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
 
     @Override
     public int getItemCount() {
-//        return (mEndHour - mStartHour) * 12;
-        return 2 * 12;
+        return (mEndHour - mStartHour) * 12;
     }
 
     @Override
@@ -213,9 +212,9 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
     private String getSegmentText(int segment) {
         int segmentSeconds = 5*60;
         String segmentText = null;
-//        int startHour = mStartHour;
+        int startHour = mStartHour;
         LogUtil.d("TimeSegmentAdapter + getSegmentText() + mStartHour = " + mStartHour);
-        int startHour = 16;
+//        int startHour = 16;
         int startMinute = 0;
         int startSecond = 0;
         long elapseSeconds = segment * segmentSeconds;

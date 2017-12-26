@@ -52,7 +52,8 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
 
     @Override
     public int getItemCount() {
-        return (mEndHour - mStartHour) * 12;
+//        return (mEndHour - mStartHour) * 12;
+        return 2 * 12;
     }
 
     @Override
@@ -212,9 +213,9 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
     private String getSegmentText(int segment) {
         int segmentSeconds = 5*60;
         String segmentText = null;
-        int startHour = mStartHour;
+//        int startHour = mStartHour;
         LogUtil.d("TimeSegmentAdapter + getSegmentText() + mStartHour = " + mStartHour);
-//        int startHour = 17;
+        int startHour = 16;
         int startMinute = 0;
         int startSecond = 0;
         long elapseSeconds = segment * segmentSeconds;
@@ -225,8 +226,15 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
             startMinute += (elapseSeconds%(60*60))/60;
             startSecond += (elapseSeconds%(60*60))%60;
         }
+        String hour = null;
         String minute = null;
         String second = null;
+        if (startHour < 10) {
+            hour = "" + "0" + startHour;
+        } else {
+            hour = "" + startHour;
+        }
+
         if (startMinute < 10) {
             minute = "" + "0" + startMinute;
         } else {
@@ -237,7 +245,7 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
         } else {
             second = "" + startSecond;
         }
-        segmentText = "" + startHour + ":" + minute + ":" + second;
+        segmentText = "" + hour + ":" + minute + ":" + second;
         return segmentText;
     }
 }

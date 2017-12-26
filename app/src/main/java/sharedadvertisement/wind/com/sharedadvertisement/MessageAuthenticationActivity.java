@@ -9,8 +9,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.telephony.SmsManager;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -45,7 +47,9 @@ public class MessageAuthenticationActivity extends Activity {
         setContentView(R.layout.message_authentication_layout);
         mLogInButton = (TextView)findViewById(R.id.mal_log_in);
         mPhoneNum = (EditText)findViewById(R.id.phone_num);
+        mPhoneNum.setInputType(InputType.TYPE_CLASS_NUMBER);
         mInputAuthenticationCode = (EditText)findViewById(R.id.input_authentication_code);
+        mInputAuthenticationCode.setInputType(InputType.TYPE_CLASS_NUMBER);
         mInputAuthenticationCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

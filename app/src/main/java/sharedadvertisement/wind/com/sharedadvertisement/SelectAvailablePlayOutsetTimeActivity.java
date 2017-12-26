@@ -93,12 +93,16 @@ public class SelectAvailablePlayOutsetTimeActivity extends Activity {
     private void getStartHour() {
         SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
         String startTime = sp.getString("startTime", null);   //时分秒
-        mStartHour = Integer.parseInt(startTime.substring(0, 2));
+        if (startTime != null) {
+            mStartHour = Integer.parseInt(startTime.substring(0, 2));
+        }
     }
     private void getEndHour() {
         SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
         String endTime = sp.getString("endTime", null);   //时分秒
-        mEndHour = Integer.parseInt(endTime.substring(0, 2));
+        if (endTime != null) {
+            mEndHour = Integer.parseInt(endTime.substring(0, 2));
+        }
     }
 
     /**

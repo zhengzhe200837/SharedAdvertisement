@@ -12,6 +12,7 @@ import sharedadvertisement.wind.com.sharedadvertisement.MainActivity;
 import sharedadvertisement.wind.com.sharedadvertisement.R;
 import sharedadvertisement.wind.com.sharedadvertisement.SelectAvailablePlayOutsetTimeActivity;
 import utils.CommonUtil;
+import utils.LogUtil;
 import utils.VideoInfo;
 
 import android.media.AudioManager;
@@ -413,12 +414,15 @@ public class AdvancedOptionsActivity extends Activity {
 		calculateCurrentTime();
 		
 		String s1=mSelectYear + "-" + mSelectMonth + "-" + mSelectDate;
-		android.util.Log.d("zz", "data1 = " + s1);
-		android.util.Log.d("zz", "data2 = " + mSelectHour + " " + mSelectMinute);
-		String s2=mCurrentYear + "-" + mCurrentMonth + "-" + mCurrentDate;
+		android.util.Log.d("zz", "AdvancedOptionsActivity + showDialog() + s1 = " + s1);
+		android.util.Log.d("zz", "AdvancedOptionsActivity + showDialog() + data2 = " + mSelectHour + " " + mSelectMinute);
+		String s2=mCurrentYear + "-" + (mCurrentMonth + 1) + "-" + mCurrentDate;
+		android.util.Log.d("zz", "AdvancedOptionsActivity + showDialog() + s2 = " + s2);
 		final int date = calculatePlayCountDownD(s1, s2);
-		final int playCountdown = mSelectHour*60 + mSelectMinute -(mCurrentHour*60 + mCurrentMinute);
-		
+		final int playCountdown = mSelectHour*60 + mSelectMinute - (mCurrentHour*60 + mCurrentMinute);
+		LogUtil.d("AdvancedOptionsActivity + showDialog() + date = " + date);
+		LogUtil.d("AdvancedOptionsActivity + showDialog() + playCountdown = " + playCountdown);
+
 		if(date < 0){
 			mShowDialogMessage = getString(R.string.select_time_erro);
 		}else if(date == 0) {

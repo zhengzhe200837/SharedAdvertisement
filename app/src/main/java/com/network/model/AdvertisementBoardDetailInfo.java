@@ -25,11 +25,13 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
     private String pictureUrl;
     private String equipmentAttribute;
     private String screenAttritute;
+    private String equipmentName;
 
     public AdvertisementBoardDetailInfo(String billboardId, long price, String address, String equipmentType,
                                         String screenType, long screenWidth, long screenHeight, String businessPhone,
                                         String startDate, String endDate, String startTime, String endTime,
-                                        String pictureUrl, String equipmentAttribute, String screenAttritute) {
+                                        String pictureUrl, String equipmentAttribute, String screenAttritute,
+                                        String equipmentName) {
         this.billboardId = billboardId;
         this.price = price;
         this.address = address;
@@ -47,6 +49,7 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
         this.pictureUrl = pictureUrl;
         this.equipmentAttribute = equipmentAttribute;
         this.screenAttritute = screenAttritute;
+        this.equipmentName = equipmentName;
     }
 
     @Override
@@ -66,6 +69,7 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
         out.writeString(pictureUrl);
         out.writeString(equipmentAttribute);
         out.writeString(screenAttritute);
+        out.writeString(equipmentName);
     }
     public static final Parcelable.Creator<AdvertisementBoardDetailInfo> CREATOR =
             new Parcelable.Creator<AdvertisementBoardDetailInfo>() {
@@ -90,6 +94,7 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
         pictureUrl = in.readString();
         equipmentAttribute = in.readString();
         screenAttritute = in.readString();
+        equipmentName = in.readString();
     }
 
     public String getEquipmentAttribute() {
@@ -164,11 +169,16 @@ public class AdvertisementBoardDetailInfo implements Parcelable{
     public String getEndTime() {
         return endTime;
     }
+
+    public String getEquipmentName() {
+        return equipmentName;
+    }
+
     public String toString() {
         return "billboardId = " + billboardId + " price = " + price + " address = " + address + " equipmentType = " + equipmentType
                 + " screenType = " + screenType + " screenWidth = " + screenWidth + " screenHeight = " + screenHeight
                 + " startDate = " + startDate + " endDate = " + endDate + " startTime = " + startTime + " endTime = " + endTime
                 + " businessPhone = " + businessPhone + " pictureUrl = " + pictureUrl + " equipmentAttribute = " + equipmentAttribute
-                + " screenAttritute = " + screenAttritute;
+                + " screenAttritute = " + screenAttritute + " equipmentName = " + equipmentName;
     }
 }

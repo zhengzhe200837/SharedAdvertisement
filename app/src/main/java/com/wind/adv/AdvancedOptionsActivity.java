@@ -15,6 +15,7 @@ import utils.CommonUtil;
 import utils.LogUtil;
 import utils.VideoInfo;
 
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -41,9 +42,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.bumptech.glide.Glide;
 import com.network.Network;
 
 public class AdvancedOptionsActivity extends Activity {
@@ -76,6 +79,8 @@ public class AdvancedOptionsActivity extends Activity {
 	private int mCurrentMinute;
 	private TextView mChargeCriterion;
 	private long mPrice;
+	private ImageView mBillBoardPicture;
+	private String mBillBoardPictureUrl;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +96,11 @@ public class AdvancedOptionsActivity extends Activity {
         mTotalPriceText = (TextView) findViewById(R.id.total_price);
         mDeleteVideo = (Button) findViewById(R.id.delete_video);
 		mChargeCriterion = (TextView)findViewById(R.id.minute_price);
+		mBillBoardPicture = (ImageView)findViewById(R.id.video_image);
+		getBillBoardPictureUrl();
+		if (mBillBoardPictureUrl != null) {
+			Glide.with(this).load(mBillBoardPictureUrl).into(mBillBoardPicture);
+		}
 		mPrice = getIntent().getLongExtra(MainActivity.CHARGECRITERION, 0);
 		mChargeCriterion.setText(String.valueOf(mPrice) + "元/秒");
         
@@ -100,6 +110,14 @@ public class AdvancedOptionsActivity extends Activity {
         initPlayTimesListener();
         initConfirmAndCancleListener();
         initDeleteVideoListener();
+	}
+
+	/**
+	 * 获取广告牌图片url
+	 */
+	private void getBillBoardPictureUrl() {
+		SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
+		mBillBoardPictureUrl = sp.getString("billBoardPictureUrl", null);
 	}
 
 	private void initConfirmAndCancleListener() {

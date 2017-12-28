@@ -91,6 +91,7 @@ public class AdvertisementBoardDetailInfoActivity extends Activity {
     }
 
     private void fillDataToViews(AdvertisementBoardDetailInfo data) {
+        mBillBoardName.setText(data.getEquipmentName());
         mBillBoardPrice.setText(String.valueOf(data.getPrice()) + "元/秒");
         mBillBoardLocation.setText(data.getAddress());
         mBillBoardPhone.setText(data.getBusinessPhone());

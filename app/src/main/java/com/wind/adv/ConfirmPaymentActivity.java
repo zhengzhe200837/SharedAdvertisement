@@ -30,11 +30,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.calendar.utils.DateUtil;
 import com.network.Network;
 import com.network.model.SelectedPlayTimeSegment;
@@ -57,6 +59,8 @@ public class ConfirmPaymentActivity extends Activity {
 	private boolean isVideoUploaded;
 	private String mTotalPriceString;
 	private String mMySelectPlayStartTime;
+	private ImageView mBillBoardPicture;
+	private String mBillBoardPictureUrl;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,12 @@ public class ConfirmPaymentActivity extends Activity {
 		mCancleText = (TextView) findViewById(R.id.cancle_text);
 		mPlayCountdownText = (TextView) findViewById(R.id.Play_countdown_text);
 		mConfirmPayMent = (Button) findViewById(R.id.confirm_payment_text);
+		mBillBoardPicture = (ImageView)findViewById(R.id.video_image);
+		getBillBoardPictureUrl();
+		if (mBillBoardPictureUrl != null) {
+			Glide.with(this).load(mBillBoardPictureUrl).into(mBillBoardPicture);
+		}
+
 		Intent intent = getIntent();
 		mMySelectPlayStartTime = intent.getStringExtra("selected_play_start_time");
 		mUploadVideoPath = intent.getStringExtra("upload_video_path");
@@ -148,6 +158,14 @@ public class ConfirmPaymentActivity extends Activity {
 				.setMediaName(mUploadVideoName)
 				.build();
 		LogUtil.d("zz + ConfirmPaymentActivity + onCreate() + mUploadMyOrderInfo = " + mUploadMyOrderInfo.toString());
+	}
+
+	/**
+	 * 获取广告牌图片url
+	 */
+	private void getBillBoardPictureUrl() {
+		SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
+		mBillBoardPictureUrl = sp.getString("billBoardPictureUrl", null);
 	}
 
 	/**

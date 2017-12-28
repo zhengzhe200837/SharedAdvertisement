@@ -69,7 +69,6 @@ import io.reactivex.schedulers.Schedulers;
 import utils.LogUtil;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
-
     private MapView mMapView = null;
     private LocationClient mLocClient;
     private MyLocationData locData;
@@ -100,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        clearStoreContentFile();
         mMoreInfo = (ImageView)findViewById(R.id.more_info);
         mMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,20 +133,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 storeBillBoardId();
                 showDialog();
                 LogUtil.d("MainActivity + OnMarkerClickListener() + selectedBillBoardId = " + mSelectedBillBoardId);
-//                network end
-//                if (marker == mMarkerA) {
-//                    moveMapCenter(mTarget);
-//                    showDialog();
-//                } else if (marker == mMarkerB) {
-//                    moveMapCenter(mTarget);
-//                    showDialog();
-//                } else if (marker == mMarkerC) {
-//                    moveMapCenter(mTarget);
-//                    showDialog();
-//                } else if (marker == mMarkerD) {
-//                    moveMapCenter(mTarget);
-//                    showDialog();
-//                }
                 return true;
             }
         });
@@ -158,6 +144,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
         requestLocationPermission();
+    }
+
+    /**
+     * 清空sharedPreference中保存的数据
+     */
+    private void clearStoreContentFile() {
+        SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
     }
 
     /**
@@ -484,6 +480,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         mCurrentAdvertisementBoardDetailInfo = advertisementBoardDetailInfo;
                         storeSelectedBillBoardOpenTime();
                         storeBusinessPhone();
+                        storeBillBoardPictureUrl();
                         fillDialogContent();
                     }
                 }, new Consumer<Throwable>() {
@@ -507,6 +504,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     /**
+     *
+     */
+    private void storeBillBoardPictureUrl() {
+        SharedPreferences sp = getSharedPreferences("SharedAdvertisement", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        if (mCurrentAdvertisementBoardDetailInfo != null) {
+            editor.putString("billBoardPictureUrl", mCurrentAdvertisementBoardDetailInfo.getPicture_url());
+            editor.commit();
+        }
+    }
+
+    /**
      *保存被选择的广告牌的开放时间
      */
     private void storeSelectedBillBoardOpenTime() {
@@ -524,7 +533,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (mCurrentAdvertisementBoardDetailInfo != null && mDialogContent != null) {
             ((TextView)mDialogContent.findViewById(R.id.price)).setText(String.valueOf(mCurrentAdvertisementBoardDetailInfo.getPrice()) + "元/秒");
             ((TextView)mDialogContent.findViewById(R.id.location)).setText(mCurrentAdvertisementBoardDetailInfo.getAddress());
-
+            LogUtil.d("MainActivity + fillDialogContent() + URL = " + mCurrentAdvertisementBoardDetailInfo.getPicture_url());
             Glide.with(mDialogContent.getContext()).load(mCurrentAdvertisementBoardDetailInfo.getPicture_url())
                     .into((ImageView)mDialogContent.findViewById(R.id.picture));
         }

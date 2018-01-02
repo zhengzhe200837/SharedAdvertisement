@@ -101,6 +101,12 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
                 @Override
                 public void onClick(View v) {
                     //点击某项直接退出activvity，将数据返回给上层activity  start
+                    if (Integer.parseInt(mCurrentMonth) < 10) {
+                        mCurrentMonth = "0" + mCurrentMonth;
+                    }
+                    if (Integer.parseInt(mCurrentDay) < 10) {
+                        mCurrentDay = "0" + mCurrentDay;
+                    }
                     mMySelectPlayStartTime = mCurrentYear + mCurrentMonth + mCurrentDay + currentHour + startMinuteSecond.substring(0, 2) + startMinuteSecond.substring(3);
                     v.setBackgroundColor(Color.parseColor("#00CD00"));
                     SelectAvailablePlayOutsetTimeActivity activity = (SelectAvailablePlayOutsetTimeActivity)mContext;
@@ -142,10 +148,18 @@ public class TimeSegmentAdapter extends RecyclerView.Adapter<TimeSegmentAdapter.
         mCurrentYear = year;
     }
     public void setCurrentMonth(String month) {
-        mCurrentMonth = month;
+        if (Integer.parseInt(month) < 10) {
+            mCurrentMonth = "0" + month;
+        } else {
+            mCurrentMonth = month;
+        }
     }
     public void setCurrentDay(String day) {
-        mCurrentDay = day;
+        if (Integer.parseInt(day) < 10) {
+            mCurrentDay = "0" + day;
+        } else {
+            mCurrentDay = day;
+        }
     }
     public List<SelectedPlayTimeSegment> getJustSelectedPlayTimeSegments() {
         android.util.Log.d("---zz", "size = " + mJustSelectedPlayTimeSegments.size());
